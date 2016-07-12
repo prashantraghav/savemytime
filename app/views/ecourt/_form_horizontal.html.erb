@@ -1,0 +1,69 @@
+<%= form_tag 'ecourt', :class=>'form-horizontal' do %>
+  <div class="form-group">
+    <label class="control-label col-sm-1">State:</label>
+    <div class="col-sm-5">
+      <%= select_tag "state_code", options_for_select(@states.collect{|s| [s["name"], s["code"]]}.unshift(['Select', '-1'])), :class=>'form-control' %>
+    </div>
+    <label class="control-label col-sm-1">District:</label>
+    <div class="col-sm-5">
+      <%= select_tag "dist_code", options_for_select([['Select District', '-1']]) , :class=>'form-control'%>
+    </div>
+  </div>
+
+  <div class="space-4"></div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-1">Court Type:</label>
+    <div class="col-sm-5 radio">
+      <label><%= radio_button_tag "court_type", "complex", false, :id=>'court_type'%>Court Complex</label>
+      <label><%= radio_button_tag "court_type", "establishment", false, :id=>'court_type'%>Court Establishement</label>
+    </div>
+    <label class="control-label col-sm-1">Court:</label>
+    <div class="col-sm-5">
+      <%= select_tag "court_code", options_for_select([['Select Court', '-1']]) , :class=>'form-control'%>
+    </div>
+  </div>
+
+  <div class="form-group hide">
+    <label class="control-label col-sm-1">Court:</label>
+    <div class="col-sm-11">
+      <%= select_tag "court_code", options_for_select([['Select Court', '-1']]) , :class=>'form-control'%>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label class="control-label col-sm-1">Name:</label>
+    <div class="col-sm-3">
+      <input id="name" name="name" type="text" class="form-control"/>
+    </div>
+    <label class="control-label col-sm-1">Year:</label>
+    <div class="col-sm-3">
+      <input id="from_year" name="from_year" class="form-control"> 
+    </div>
+    <label class="col-sm-1"> <center>To</center> </label>
+    <div class="col-sm-3">
+      <input id="to_year" name="to_year" class="form-control"> 
+    </div>
+  </div>
+
+  <div class="space-4"></div>
+
+  <div class="form-group hide">
+    <label class="control-label col-sm-1">Year:</label>
+    <div class="col-sm-4">
+      <input id="from_year" name="from_year" class="form-control"> 
+    </div>
+    <label class="col-sm-1"> <center>To</center> </label>
+    <div class="col-sm-5">
+      <input id="to_year" name="to_year" class="form-control"> 
+    </div>
+  </div>
+
+  <div class="form-group"> 
+    <div class="col-sm-offset-1 col-sm-11">
+      <button type="submit" class="btn btn-primary" style="width:100%">Submit</button>
+    </div>
+  </div>
+<% end %>
+
