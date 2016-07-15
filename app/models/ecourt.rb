@@ -1,5 +1,6 @@
 require 'resolv-replace'
 require 'tesseract'
+
 class Ecourt
   attr_accessor :state_code, :dist_code, :court_code, :court_code_arr, :name, :year, :f
 
@@ -21,13 +22,14 @@ class Ecourt
     post_request
   end
 
-  def get_details
+  def get_details(case_no, cino)
     set_url
     get_request
     req = Net::HTTP::Post.new(@post_details_url)
     __csrf_magic = @get_resp.body.match('csrfMagicToken.*?=.*?".*?";').to_s.gsub(/csrfMagicToken.*?=.*?"/, '').gsub('";', '')
     req.add_field('cookie', @cookie)
-    req.set_form_data({'__csrf_magic'=>__csrf_magic, 'appFlag'=>'web', 'case_no'=>'205101400102010', 'cino'=>'MHMT010000522010', 'court_code'=>'1', 'dist_code'=>'39', 'state_code'=>'1'})
+    #req.set_form_data({'__csrf_magic'=>__csrf_magic, 'appFlag'=>'web', 'case_no'=>'205101400102010', 'cino'=>'MHMT010000522010', 'court_code'=>'1', 'dist_code'=>'39', 'state_code'=>'1'})
+    req.set_form_data({'__csrf_magic'=>__csrf_magic, 'appFlag'=>'web', 'case_no'=>case_no, 'cino'=>cino, 'court_code'=>@court_code, 'dist_code'=>@dist_code, 'state_code'=>@state_code})
     resp = @http.request req
     resp.body
   end

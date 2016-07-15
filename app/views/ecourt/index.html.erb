@@ -104,7 +104,14 @@ $("form").submit(function(){
 })
 
 $("body").on('click', 'a.view_details', function(){
-  $("#myModal").modal('toggle')
+    $.ajax({
+      url: '<%= ecourt_details_path %>',
+      data: {state_code: $(this).attr('state'), dist_code: $(this).attr('dist'), court_code: $(this).attr('court'), caseno: $(this).attr('caseno'), cino: $(this).attr('cino')},
+      success: function(details){
+        $("#myModal").find('.modal-body').html(details)
+        $("#myModal").modal({show: true})
+      }
+    });
 })
 })
 </script>

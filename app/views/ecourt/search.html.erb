@@ -27,7 +27,12 @@
                 <td style="padding-left:10px; width:30%"><%= r[1] %></td>
                 <td style="padding-left:10px; width:60%"><%= raw r[2]%></td>
                 <td style="padding-left:10px; width:10%">
-                  <%= link_to "view", "javascript:void(0)", 'caseno'=>r[0], 'cino'=>r[3], :class=>'view_details'%>
+                  <% Rails.logger.info(r[0]) %>
+                  <%= link_to "view",
+                    "#{ecourt_details_path}?state_code=#{params['state_code']}&dist_code=#{params['dist_code']}&court_code=#{params['court_code']}&caseno=#{r[0].gsub(/[A-Z][%]/, '')}&cino=#{r[3]}",
+                              :target=>"_blank"%>
+                             <%# 'caseno'=>r[0], 'cino'=>r[3], 'state'=>params['state_code'], 'dist'=>params['dist_code'], 'court'=>params['court_code'], 
+                              :class=>'view_details' %>
                 </td>
               </tr>
             <% end %>

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'ecourt/districts', :as=>'ecourt_districts'
   get 'ecourt/courts', :as=>'ecourt_courts'
   post 'ecourt/search', :as=>'ecourt_search'
+  get 'ecourt/details', :as=>'ecourt_details'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
