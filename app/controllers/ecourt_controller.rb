@@ -25,7 +25,6 @@ class EcourtController < ApplicationController
   end
 
   def details
-     logger.info("\n\n caseno - #{params['caseno']}\n\n")
      court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'], :court_code=>params['court_code']}
      e = Ecourt.new(court_params)
      @details = e.get_details(URI.unescape(params['caseno'].match(/[0-9]*$/).to_s), params['cino'])
