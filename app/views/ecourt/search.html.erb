@@ -1,46 +1,21 @@
 <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <span>Time Taken: <%= @time[0] %> Min <%= @time[1].to_i %> Sec</span>
-    <h3><label class="control-label label label-primary"><strong>Court: <%= @court_name %></strong></label></h3><br/>
+ <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+   <span>Time Taken: <%= @time[0] %> Min <%= @time[1].to_i %> Sec</span>
+  </div>
+</div>
+<br/>
+<div class="row">
+ <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <ul class="nav nav-pills">
-      <% @results.each_with_index do |(year, result), index| %>
-        <li class="<%= index==0 ? "active":"" %>"><a data-toggle="pill" href="#<%= year.to_s %>"><%= year %><span class="badge"><%= result.split('##').each.count %></span></a></li>
-    <% end %>
+      <li class="<%= (@results[:complex].empty?) ? "":"active" %>"><a data-toggle="pill" href="#court_com">Court Complex</a></li>
+      <li class="<%= (@results[:complex].empty?) ? "active":"" %>"><a data-toggle="pill" href="#court_est">Court Establishment</a></li>
     </ul>
-    <div class="well">
-      <div class="tab-content">
-        <% @results.each_with_index do |(year, result), index| %>
-          <div id="<%= year.to_s %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
-          <div class="table-responsive">
-            <table class='table table-bordered'>
-              <thead>
-                <tr>
-                  <th style="width:30%"><strong>CaseType/CaseNumber/CaseYear</strong></th>
-                  <th style="width:60%"><strong>Petitioner Versus Respondant </strong></th>
-                  <th style="width:10%"></th>
-                </tr>
-              </thead>
-              <tbody>
-              <% result.split('##').each do |row| %>
-                <% r = row.split('~') %>
-              <tr>
-                <td style="padding-left:10px; width:30%"><%= r[1] %></td>
-                <td style="padding-left:10px; width:60%"><%= raw r[2]%></td>
-                <td style="padding-left:10px; width:10%">
-                  <%= link_to "view",
-                    "#{ecourt_details_path}?state_code=#{params['state_code']}&dist_code=#{params['dist_code']}&court_code=#{params['court_code']}&caseno=#{r[0]}&cino=#{r[3]}",
-                     :target=>"_blank"
-		  %>
-                             <%# 'caseno'=>r[0], 'cino'=>r[3], 'state'=>params['state_code'], 'dist'=>params['dist_code'], 'court'=>params['court_code'], 
-                              :class=>'view_details' %>
-                </td>
-              </tr>
-            <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% end %>
+    <div class="tab-content well">
+      <div id="court_com" class="tab-pane fade in <%= (@results[:complex].empty?) ? '':'active' %>">
+	<%= render 'ecourt/partials/result/court_type', :courts=>@results[:complex], :type=>'complex' %>
+      </div>
+      <div id="court_est" class="tab-pane fade in <%= (@results[:complex].empty?) ? "active":"" %>">
+	<%= render 'ecourt/partials/result/court_type', :courts=>@results[:establishment], :type=>'establishment' %>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <h3>Parse Ecourt</h3>
-<%= render 'form_horizontal' %>
+<%= render 'ecourt/partials/form_horizontal' %>
 
 <div class="row" id="process" style="display:none">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
@@ -9,45 +9,28 @@
     <center><progress></progress></center>
   </div>
 </div>
+
+<br/>
+
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
     <div id="result" ></div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <div id="myModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
-          </div>
-          <div class="modal-body">
-            <p>Some text in the modal.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 $(document).ready(function(){
+
 $("body").on('change', '#state_code', function(){
     $.ajax({
       url: '<%= ecourt_districts_path %>',
       beforeSend: function(){
-        $("#dist_code").html('<option value="-1">Select District</option>').trigger('change')
+        $("#dist_code").html('<option value="-1">---</option>')
       },
       data: {state_code: $(this).val()},
       success: function(data){
-        options = '';
+        options = '<option value="-1">Select District</option>';
         $.each(data, function(i, dist){options +='<option value="'+dist.code+'">'+dist.name+'</option>'})
         console.log(options)
         $("#dist_code").html(options)
@@ -57,27 +40,40 @@ $("body").on('change', '#state_code', function(){
 
 
 $("body").on('change', "#dist_code", function(){
-        $("input[name='court_type']").removeAttr('checked')
-        $("#court_code").html('<option value="-1">Select Court</option>')
-    });
-
-
-$("body").on('change', '#court_type', function(){
+    $("input[name='court_type']").removeAttr('checked')
+    $("#court_code").html('<option value="-1">Select Court</option>')
     $.ajax({
-      url: '<%= ecourt_courts_path %>',
-      data: {state_code: $('#state_code').val(), dist_code: $("#dist_code").val(), court_type: $(this).val()},
-      success: function(data){
-        options = '';
-        $.each(data, function(i, court){options +='<option value="'+court.code+'">'+court.name+'</option>'})
-        console.log(options)
-        $("#court_code").html(options)
-      }
+      	url: '<%= ecourt_courts_path %>',
+      	data: {state_code: $('#state_code').val(), dist_code: $("#dist_code").val()},
+      	success: function(data){
+        	options = '';
+        	$.each(data.complex, function(i, court){
+		   options +='<div class="checkbox">'
+			       +'<label><input type="checkbox" class="court_code_arr" court-name="'+court.name+'"name="court_code_arr[]" value="'+court.code+'"/>'+court.name+'</label>'
+			   +'</div>'
+		 })
+        	$("#court_code_arr").html(options)
+
+        	options = '';
+        	$.each(data.establishment, function(i, court){
+		   options +='<div class="checkbox">'
+				+'<label><input type="checkbox" class="court_code" court-name="'+court.name+'" name="court_code[]" value="'+court.code+'"/>'+court.name+'</label>'
+			     +'</div>'
+		})
+        	$("#court_code").html(options)
+      	}
     });
 });
 
 
 $("form").submit(function(){
-    $.ajax({
+  court_complex=[];
+  $(".court_code_arr:checked").each(function(){court_complex.push({'code': $(this).val(), 'name': $(this).attr('court-name')})})
+
+  court_establishment = [];
+  $(".court_code:checked").each(function(){court_establishment.push({'code': $(this).val(), 'name' : $(this).attr('court-name')})})
+
+  $.ajax({
       url: '<%= ecourt_search_path %>',
       type: 'POST',
       beforeSend: function(){
@@ -87,9 +83,8 @@ $("form").submit(function(){
       data: {
               state_code: $('#state_code').val(), 
               dist_code: $("#dist_code").val(), 
-              court_type: $("#court_type").val(), 
-              court_code: $('#court_code').val(),
-              court_name: $('#court_code option:selected').text(),
+              court_complex: court_complex,
+              court_establishment: court_establishment,
               from_year: $('#from_year').val(),
               to_year: $('#to_year').val(),
               name: $('#name').val()
@@ -99,19 +94,7 @@ $("form").submit(function(){
         $("#process").hide();
       }
     });
-
     return false;
-})
-
-$("body").on('click', 'a.view_details', function(){
-    $.ajax({
-      url: '<%= ecourt_details_path %>',
-      data: {state_code: $(this).attr('state'), dist_code: $(this).attr('dist'), court_code: $(this).attr('court'), caseno: $(this).attr('caseno'), cino: $(this).attr('cino')},
-      success: function(details){
-        $("#myModal").find('.modal-body').html(details)
-        $("#myModal").modal({show: true})
-      }
-    });
 })
 })
 </script>

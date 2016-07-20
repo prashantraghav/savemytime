@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+    <ul class="nav nav-pills">
+      <% courts.each_with_index do |(code, court), i| %>
+        <li class="<%= (i==0) ? 'active':'' %>">
+          <a data-toggle="pill" data-toggle="tooltip" title="<%= court[:name] %>" href="#court_<%= type %>_<%= code %>">
+            <%= truncate(court[:name], :length=>30) %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+    <div class="tab-content well">
+      <div id="court_com_name1" class="tab-pane fade in active"></div>
+      <% courts.each_with_index do |(code, court), i| %>
+        <div id="court_<%= type %>_<%= code %>" class="tab-pane fade in <%= (i==0) ? 'active':'' %>">
+	   <%= render 'ecourt/partials/result/data', :results=>court[:results], :type=>type, :code=>code , :court_name=>court[:name] %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+

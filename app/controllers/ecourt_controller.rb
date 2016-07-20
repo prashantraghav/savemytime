@@ -12,13 +12,14 @@ class EcourtController < ApplicationController
   end
 
   def courts
-    @courts = get_courts[params['court_type'].to_sym].collect{|c| {:code=>c['code'], :name=>c['name']}}
+    @courts = get_courts
     render :json=>@courts
   end
 
   def search
     @court_name = params['court_name']
     time_started = Time.now
+    @state_code, @dist_code = params['state_code'], params['dist_code']
     @results = get_result
     time_taken = Time.now - time_started
     @time = time_taken.divmod(60)
@@ -48,37 +49,27 @@ class EcourtController < ApplicationController
   end
 
   def get_result
-    results = Hash.new
-    params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
-        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year}
-        court_params.merge! (params['court_type'].eql?('complex')) ? {:court_code_arr=>params['court_code']} : {:court_code=>params['court_code']} 
-
-        e = Ecourt.new(court_params)
-        results[year] = e.get_result
-    end
-    return results
-  end
-
-=begin
-  def get_result_old
     results = {:complex=>Hash.new, :establishment=>Hash.new}
     courts = get_courts
-    params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
-      results[:complex][year] = Hash.new
-      results[:establishment][year] = Hash.new
 
-      courts[:complex].each do |court|
-        e = Ecourt.new(:state_code=>params['state_code'], :dist_code=>params['dist_code'], :court_code_arr=>court['code'], :name=>params['name'], :year=>year)
-        results[:complex][year][court['name']] = e.get_result
+    params["court_complex"].try(:each) do |i, court|
+      results[:complex][court["code"]] = {:name=>court["name"], :results=>Hash.new}
+      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
+        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code_arr=>court["code"]}
+        e = Ecourt.new(court_params)
+      	results[:complex][court["code"]][:results][year]=e.get_result
       end
-
-      courts[:establishment].each do |court|
-        e = Ecourt.new(:state_code=>params['state_code'], :dist_code=>params['dist_code'], :court_code=>court['code'], :name=>params['name'], :year=>year)
-        results[:establishment][year][court['name']] = e.get_result
-      end
-
     end
+
+    params["court_establishment"].try(:each) do |i, court|
+      results[:establishment][court["code"]] = {:name=>court["name"], :results=>Hash.new}
+      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
+        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
+        e = Ecourt.new(court_params)
+      	results[:establishment][court["code"]][:results][year]=e.get_result
+      end
+    end
+
     return results
   end
-=end
 end

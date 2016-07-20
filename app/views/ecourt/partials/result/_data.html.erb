@@ -1,0 +1,41 @@
+<h4><label class="control-label label label-primary"><strong>Court: <%= court_name %></strong></label></h4><br/>
+
+<ul class="nav nav-pills"> 
+      <% results.each_with_index do |(year, result), index| %> 
+        <li class="<%= index==0 ? "active":"" %>">
+          <a data-toggle="pill" href="#court_<%= type %>_<%= code %>_<%= year.to_s %>"><%= year %><span class="badge"><%= result.split('##').each.count %></span></a>
+        </li> 
+    <% end %> 
+    </ul> 
+    <div class="well"> 
+      <div class="tab-content"> 
+        <% results.each_with_index do |(year, result), index| %> 
+          <div id="court_<%= type %>_<%= code %>_<%= year.to_s %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>"> 
+          <div class="table-responsive"> 
+            <table class='table table-bordered'> 
+              <thead> 
+                <tr> 
+                  <th style="width:30%"><strong>CaseType/CaseNumber/CaseYear</strong></th> 
+                  <th style="width:60%"><strong>Petitioner Versus Respondant </strong></th> 
+                  <th style="width:10%"></th> 
+                </tr> 
+              </thead> 
+              <tbody> 
+              <% result.split('##').each do |row| %> 
+                <% r = row.split('~') %> 
+              <tr> 
+                <td style="padding-left:10px; width:30%"><%= r[1] %></td> 
+                <td style="padding-left:10px; width:60%"><%= raw r[2]%></td> 
+                <td style="padding-left:10px; width:10%"> 
+                  <%= link_to "view", details_path(code, r[0],r[3]), :target=>"_blank" %> 
+                </td> 
+              </tr> 
+            <% end %> 
+              </tbody> 
+            </table> 
+          </div> 
+        </div> 
+      <% end %> 
+      </div> 
+    </div>
+
