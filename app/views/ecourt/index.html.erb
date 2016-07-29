@@ -1,3 +1,5 @@
+<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+
 <h3>Parse Ecourt</h3>
 <%= render 'ecourt/partials/form_horizontal' %>
 
@@ -25,7 +27,7 @@ $(document).ready(function(){
 $("body").on('change', '#state_code', function(){
     $.ajax({
       url: '<%= ecourt_districts_path %>',
-      beforeSend: function(){
+      beforeSend: function(xhr){
         $("#dist_code").html('<option value="-1">---</option>')
       },
       data: {state_code: $(this).val()},
@@ -76,7 +78,8 @@ $("form").submit(function(){
   $.ajax({
       url: '<%= ecourt_search_path %>',
       type: 'POST',
-      beforeSend: function(){
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
         $("#process").show();
         $("#result").html('')
       },

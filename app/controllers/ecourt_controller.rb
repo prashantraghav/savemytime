@@ -51,12 +51,13 @@ class EcourtController < ApplicationController
   def get_result
     results = {:complex=>Hash.new, :establishment=>Hash.new}
     courts = get_courts
-
+    search = current_user.searches.create(:params=>params)
     params["court_complex"].try(:each) do |i, court|
       results[:complex][court["code"]] = {:name=>court["name"], :results=>Hash.new}
       params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
         court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = CourtComplex.new(court_params).result
+        #e = CourtComplex.new(court_params).result
+        e = search.court_complexes.new(court_params).result
       	results[:complex][court["code"]][:results][year]=e.response_body
       end
     end
@@ -65,7 +66,8 @@ class EcourtController < ApplicationController
       results[:establishment][court["code"]] = {:name=>court["name"], :results=>Hash.new}
       params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
         court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = CourtEstablishment.new(court_params).result
+        #e = CourtEstablishment.new(court_params).result
+        e = search.court_establishments.new(court_params).result
       	results[:establishment][court["code"]][:results][year]=e.response_body
       end
     end
