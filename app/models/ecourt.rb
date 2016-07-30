@@ -37,11 +37,11 @@ class Ecourt
   private
 
   def set_url
-    @uri = URI('http://ecourts.gov.in')
-    @get_url = "/services/cases/ki_petres.php?state_cd=#{@state_code}&dist_cd=#{@dist_code}&appFlag=web"
-    @captcha_url = "/services/cases/image_captcha.php"
-    @post_url = "/services/cases/ki_petres_qry.php"
-    @post_details_url = "/services/cases/o_civil_case_history.php"
+    @uri = URI('http://services.ecourts.gov.in')
+    @get_url = "/ecourtindia/cases/ki_petres.php?state_cd=#{@state_code}&dist_cd=#{@dist_code}&appFlag=web"
+    @captcha_url = "/ecourtindia/cases/image_captcha.php"
+    @post_url = "/ecourtindia/cases/ki_petres_qry.php"
+    @post_details_url = "/ecourtindia/cases/o_civil_case_history.php"
   end
 
   def get_request
