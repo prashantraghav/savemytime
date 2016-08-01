@@ -3,7 +3,8 @@
 <ul class="nav nav-pills"> 
       <% results.each_with_index do |(year, result), index| %> 
         <li class="<%= index==0 ? "active":"" %>">
-          <a data-toggle="pill" href="#court_<%= type %>_<%= code %>_<%= year.to_s %>"><%= year %><span class="badge"><%= result.split('##').each.count %></span></a>
+          <% result_count = (result.blank?) ? 0 : result.split('##').each.count %>
+          <a data-toggle="pill" href="#court_<%= type %>_<%= code %>_<%= year.to_s %>"><%= year %><span class="badge"><%= result_count %></span></a>
         </li> 
     <% end %> 
     </ul> 
@@ -12,7 +13,8 @@
         <% results.each_with_index do |(year, result), index| %> 
           <div id="court_<%= type %>_<%= code %>_<%= year.to_s %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>"> 
           <div class="table-responsive"> 
-            <table class='table table-bordered'> 
+            <% unless result.blank? %>
+             <table class='table table-bordered'> 
               <thead> 
                 <tr> 
                   <th style="width:30%"><strong>CaseType/CaseNumber/CaseYear</strong></th> 
@@ -36,6 +38,9 @@
                <% end %> 
               </tbody> 
             </table> 
+          <% else %>
+            <h4><label class="control-label label label-danger">No Result</label><h3>
+          <% end %>
           </div> 
         </div> 
       <% end %> 
