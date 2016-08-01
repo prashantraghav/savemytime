@@ -51,4 +51,4 @@ production:
   <<: *default
   database: parser_production
   username: parser
-  password: <%= ENV['VIRAL_FEEDS_DATABASE_PASSWORD'] %>
+  password: <%= ENV['PARSER_DATABASE_PASSWORD'] %>
