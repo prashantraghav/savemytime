@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20160725173002) do
     t.integer  "state_code",    limit: 4
     t.integer  "dist_code",     limit: 4
     t.string   "court_type",    limit: 255
-    t.integer  "court_code",    limit: 4
+    t.string   "court_code",    limit: 255
     t.string   "name",          limit: 255
     t.integer  "year",          limit: 4
     t.string   "response_code", limit: 255

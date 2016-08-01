@@ -3,9 +3,9 @@ require 'nokogiri'
 require 'open-uri'
 require 'net/http'
 
-uri = URI('http://ecourts.gov.in')
-get_url = '/services/'
-post_url = '/services/index_qry.php'
+uri = URI('http://services.ecourts.gov.in')
+get_url = '/ecourtindia/'
+post_url = '/ecourtindia/index_qry.php'
 get_req = Net::HTTP::Get.new(get_url)
 
 http = Net::HTTP.start(uri.host, uri.port)
@@ -32,14 +32,14 @@ states.each_with_index do |state, index|
 
   post_req = Net::HTTP::Post.new(post_url)
   post_req.add_field('cookie', cookie)
-  post_req.add_field('referer', 'http://ecourts.gov.in/services/')
+  post_req.add_field('referer', 'http://services.ecourts.gov.in')
   post_req.set_form_data params
 
   res = http.request post_req
   #res = Net::HTTP.post_form(uri, params)
   states[index]['dist'] =  res.body.split('#').collect { |d| {'code'=>d.split('~')[0].to_i, 'name'=>d.split('~')[1]} unless d.split('~')[1] == 'Select District'}.compact
   states[index]['dist'].each_with_index do |dist, i|
-    get = Net::HTTP::Get.new("/services/cases/ki_petres.php?state_cd=#{state['code']}&dist_cd=#{dist['code']}&appFlag=web")
+    get = Net::HTTP::Get.new("/ecourtindia/cases/ki_petres.php?state_cd=#{state['code']}&dist_cd=#{dist['code']}&appFlag=web")
     resp = http.request(get)
     page = Nokogiri::HTML(resp.body)
     complex_options = page.css('select#court_complex_code > option')
@@ -50,7 +50,7 @@ states.each_with_index do |state, index|
       next if a == 0
       code = op.to_s.match(/value="(.*?)"/).to_s.gsub('value="', '').gsub('"', '').gsub(/.*?@/, '')
       name = op.to_s.match('(>.*<)').to_s.gsub('>', '').gsub('<', '')
-      states[index]['dist'][i]['court_complex'] << {'code'=>code.to_i, 'name'=>name}
+      states[index]['dist'][i]['court_complex'] << {'code'=>code, 'name'=>name}
     end
 
     states[index]['dist'][i]['court_establishment'] = []
@@ -58,7 +58,7 @@ states.each_with_index do |state, index|
       next if at == 0
       c = opt.to_s.match(/value="(.*?)"/).to_s.gsub('value="', '').gsub('"', '')
       n = opt.to_s.match('(>.*<)').to_s.gsub('>', '').gsub('<', '')
-      states[index]['dist'][i]['court_establishment'] << {'code'=>c.to_i, 'name'=>n}
+      states[index]['dist'][i]['court_establishment'] << {'code'=>c, 'name'=>n}
     end
 
   end

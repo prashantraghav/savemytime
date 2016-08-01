@@ -4,7 +4,7 @@ class CreateEcourts < ActiveRecord::Migration
       t.integer :state_code
       t.integer :dist_code
       t.string :court_type
-      t.integer :court_code
+      t.string :court_code
       t.string :name
       t.integer :year
       t.string :response_code

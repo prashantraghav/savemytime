@@ -12,10 +12,10 @@
     </ul>
     <div class="tab-content well">
       <div id="court_com" class="tab-pane fade in <%= (@results[:complex].empty?) ? '':'active' %>">
-	<%= render 'ecourt/partials/result/court_type', :courts=>@results[:complex], :type=>'complex' %>
+	      <%= render 'ecourt/partials/result/court_type', :courts=>@results[:complex], :type=>'complex' %>
       </div>
       <div id="court_est" class="tab-pane fade in <%= (@results[:complex].empty?) ? "active":"" %>">
-	<%= render 'ecourt/partials/result/court_type', :courts=>@results[:establishment], :type=>'establishment' %>
+	      <%= render 'ecourt/partials/result/court_type', :courts=>@results[:establishment], :type=>'establishment' %>
       </div>
     </div>
   </div>
