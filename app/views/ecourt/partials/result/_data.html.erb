@@ -23,14 +23,17 @@
               <tbody> 
               <% result.split('##').each do |row| %> 
                 <% r = row.split('~') %> 
-              <tr> 
-                <td style="padding-left:10px; width:30%"><%= r[1] %></td> 
-                <td style="padding-left:10px; width:60%"><%= raw r[2]%></td> 
-                <td style="padding-left:10px; width:10%"> 
-                  <%= link_to "view", details_path(code, r[0],r[3]), :target=>"_blank" %> 
-                </td> 
-              </tr> 
-            <% end %> 
+                <% court_name_display= (!court_name.eql?(r[6].split("@#")[0])) ? true : false %> 
+                <% court_name = r[6].split("@#")[0] unless court_name.eql?(r[6].split("@#")[0]) %> 
+                <% if court_name_display %> <tr><td colspan="3"><h4><label class="control-label label label-primary"><%= court_name %></label></h4></td></tr> <% end %>
+                <tr> 
+                  <td style="padding-left:10px; width:30%"><%= r[1] %></td> 
+                  <td style="padding-left:10px; width:60%"><%= raw r[2]%></td> 
+                  <td style="padding-left:10px; width:10%"> 
+                    <%= link_to "view", details_path(code, r[0],r[3]), :target=>"_blank" %> 
+                  </td> 
+                </tr> 
+               <% end %> 
               </tbody> 
             </table> 
           </div> 
