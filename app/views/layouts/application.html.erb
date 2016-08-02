@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/> <!-- link to stylesheet CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> <!--  link to font awesome -->
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/> <!-- link to stylesheet CDN -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> <!--  link to font awesome -->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-    <title>Parser Ecourt! Save your time</title>
+<title>Parser Ecourt! Save your time</title>
 
-    <%# = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-    <%= csrf_meta_tags %>
-  </head>
-  <body>
-  <div class="container">
+<%# = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+<%= csrf_meta_tags %>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <% unless current_user.nil? %>
+        <%= link_to "Ecourt", ecourt_path %> |
+        <%= link_to "Stats", control_panel_stats_index_path%>
+        <% if current_user.admin? %>
+          | <%= link_to "Users", control_panel_authorization_index_path%>
+        <% end %>
+        <%= link_to "Sign out", destroy_user_session_path, :method => :delete, :class=>'pull-right'%>
+        <span class="pull-right"> Welcome <%= current_user.email %> | &nbsp; </span>
+      <% end %>
+    </div>
+  </div>
+  <br/></br/>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <%= yield %>
     </div>
-  </body>
+  </div>
+</div>
+</body>
 </html>

@@ -4,14 +4,14 @@
       <% results.each_with_index do |(year, result), index| %> 
         <li class="<%= index==0 ? "active":"" %>">
           <% result_count = (result.blank?) ? 0 : result.split('##').each.count %>
-          <a data-toggle="pill" href="#court_<%= type %>_<%= code %>_<%= year.to_s %>"><%= year %><span class="badge"><%= result_count %></span></a>
+          <a data-toggle="pill" href="#court_<%= type %>_<%= code.gsub(",", "_") %>_<%= year.to_s %>"><%= year %><span class="badge"><%= result_count %></span></a>
         </li> 
     <% end %> 
     </ul> 
     <div class="well"> 
       <div class="tab-content"> 
         <% results.each_with_index do |(year, result), index| %> 
-          <div id="court_<%= type %>_<%= code %>_<%= year.to_s %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>"> 
+          <div id="court_<%= type %>_<%= code.gsub(",","_") %>_<%= year.to_s %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>"> 
           <div class="table-responsive"> 
             <% unless result.blank? %>
              <table class='table table-bordered'> 

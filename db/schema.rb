@@ -45,7 +45,10 @@ ActiveRecord::Schema.define(version: 20160725173002) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 255
     t.string   "last_sign_in_ip",        limit: 255
-    t.string   "type",                   limit: 255
+    t.integer  "failed_attempts",        limit: 4,   default: 0,  null: false
+    t.string   "unlock_token",           limit: 255
+    t.datetime "locked_at"
+    t.boolean  "admin"
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
   end

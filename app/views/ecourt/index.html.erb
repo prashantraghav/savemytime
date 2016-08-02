@@ -1,5 +1,3 @@
-<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-
 <h3>Parse Ecourt</h3>
 <%= render 'ecourt/partials/form_horizontal' %>
 
@@ -34,7 +32,6 @@ $("body").on('change', '#state_code', function(){
       success: function(data){
         options = '<option value="-1">Select District</option>';
         $.each(data, function(i, dist){options +='<option value="'+dist.code+'">'+dist.name+'</option>'})
-        console.log(options)
         $("#dist_code").html(options)
       }
     });

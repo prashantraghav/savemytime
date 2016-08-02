@@ -1,0 +1,2 @@
+module ControlPanel::StatsHelper
+end

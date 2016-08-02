@@ -1,13 +1,21 @@
 Rails.application.routes.draw do
-  devise_for :users
-  get 'ecourt', :to=>'ecourt#index'
-  post 'ecourt', :to=>'ecourt#index'
 
+  namespace :control_panel do
+    get 'stats/index'
+  end
+
+  devise_for :users
+
+  get 'ecourt', :to=>'ecourt#index'
   get 'ecourt/districts', :as=>'ecourt_districts'
   get 'ecourt/courts', :as=>'ecourt_courts'
   post 'ecourt/search', :as=>'ecourt_search'
   get 'ecourt/details', :as=>'ecourt_details'
 
+  namespace :control_panel do
+    get 'authorization', :to=>'authorization#index', :as=>'authorization_index'
+    put 'authorization/:id/update', :to=>"authorization#update" , :as=>'authorization_update'
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -1,0 +1,2 @@
+module ControlPanel::AuthorizationHelper
+end
