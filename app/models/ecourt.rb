@@ -31,7 +31,7 @@ class Ecourt < ActiveRecord::Base
     begin
       resp  = EcourtResponse.new(court_params).search
     rescue => e
-      puts e.inspect
+      resp = e.response
       retry unless(tries-=1).zero?
     end
 

@@ -1,7 +1,8 @@
 class EcourtResponseError < StandardError
-  attr_reader :code, :body
-  def initialize(msg="Error occurred.", code, body)
-    @code , @body = code, body
+  attr_reader :response
+  def initialize(msg="Error occurred.", resp)
+    @response = resp
+    Rails.logger.info("#{self.inspect} with response #{resp.inspect}")
     super(msg)
   end
 end

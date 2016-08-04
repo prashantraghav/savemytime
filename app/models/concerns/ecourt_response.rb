@@ -71,7 +71,7 @@ class EcourtResponse
     req.add_field('cookie', @cookie)
     req.set_form_data(post_params)
     resp = @http.request req
-    raise EcourtResponseError.new("Failed Response", resp.code, resp.body) unless resp.code.to_i == 200 and resp.body.match(/#{@name}/i)
+    raise EcourtResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 and resp.body.match(/#{@name}/i)
     resp
   end
 
