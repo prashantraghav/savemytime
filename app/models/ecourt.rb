@@ -31,8 +31,8 @@ class Ecourt < ActiveRecord::Base
     begin
       resp  = EcourtResponse.new(court_params).search
     rescue => e
-      resp = e.response
-      retry unless(tries-=1).zero?
+      resp = e.response if e.class.to_s.eql?('EcourtResponseError')
+      #retry unless(tries-=1).zero?
     end
 
     return resp
