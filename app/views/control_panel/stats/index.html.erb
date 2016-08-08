@@ -1,25 +1,47 @@
 <div class="row">
-  <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-    <label>My Searches: <%= @my_searches %></label>
-  </div>
-  <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">
-    <label>Total Searches: <%= @total_searches %></label>
+  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+    <h3>My Searches </h3><hr/>
+
   </div>
 </div>
+<div class="row">
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Today: </strong> <%= @my_searches[:today] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Yesterday: </strong> <%= @my_searches[:yesterday] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>This Week: </strong> <%= @my_searches[:this_week] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Last Week: </strong> <%= @my_searches[:last_week] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>This Month: </strong> <%= @my_searches[:this_month] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Total: </strong> <%= @my_searches[:total] %> </div>
+</div>
 <br/>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+    <h3>Searches By Users </h3><hr/>
+  </div>
+</div>
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
 <table class="table table-responsive" id="users_searches">
   <thead>
     <tr>
       <th>User Email</th>
-      <th>Searches</th>
+      <th>Today</th>
+      <th>Yesterday</th>
+      <th>This Week</th>
+      <th>Last Week</th>
+      <th>This Month</th>
+      <th>Total</th>
     </tr>
   </thead>
   <tbody>
   <% @users.each do |user| %>
     <tr>
     <td><%= user.email %></td>  
+    <td><%= user.searches.today.count %></td>  
+    <td><%= user.searches.yesterday.count %></td>  
+    <td><%= user.searches.this_week.count %></td>  
+    <td><%= user.searches.last_week.count %></td>  
+    <td><%= user.searches.this_month.count %></td>  
+    <td><%= user.searches.this_month.count %></td>  
     <td><%= user.searches.count %></td>  
   </tr>
   <% end %>

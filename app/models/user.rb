@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   after_create :lock
   after_save :never_lock_super_admin, :never_revoke_admin_privileges_from_super_admin #super_admin is first user.
 
+  #default_scope {where('id != ?', User.first.id)}
+
   def lock
     self.lock_access!(:send_instructions=>false)
   end

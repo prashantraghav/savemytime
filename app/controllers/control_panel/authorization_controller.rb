@@ -3,7 +3,7 @@ class ControlPanel::AuthorizationController < ApplicationController
   before_action :authorize_user
 
   def index
-    @users = User.all
+    @users = User.all.reject{|u| u.id == User.first.id}
   end
 
   def update
