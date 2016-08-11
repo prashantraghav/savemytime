@@ -3,7 +3,7 @@
     <ul class="nav nav-pills">
       <% courts.each_with_index do |(code, court), i| %>
         <li class="<%= (i==0) ? 'active':'' %>">
-          <a data-toggle="pill" data-toggle="tooltip" title="<%= court[:name] %>" href="#court_<%= type %>_<%= code %>">
+          <a data-toggle="pill" data-toggle="tooltip" title="<%= court[:name] %>" href="#court_<%= type %>_<%= code.gsub(",", "_") %>">
             <%= truncate(court[:name], :length=>30) %>
           </a>
         </li>
@@ -14,7 +14,7 @@
     <div class="tab-content well">
       <div id="court_com_name1" class="tab-pane fade in active"></div>
       <% courts.each_with_index do |(code, court), i| %>
-        <div id="court_<%= type %>_<%= code %>" class="tab-pane fade in <%= (i==0) ? 'active':'' %>">
+        <div id="court_<%= type %>_<%= code.gsub(',', '_') %>" class="tab-pane fade in <%= (i==0) ? 'active':'' %>">
 	   <%= render 'ecourt/partials/result/data', :results=>court[:results], :type=>type, :code=>code , :court_name=>court[:name] %>
         </div>
       <% end %>
