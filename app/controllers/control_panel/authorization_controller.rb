@@ -1,6 +1,6 @@
 class ControlPanel::AuthorizationController < ApplicationController
   
-  before_action :authorize_user
+  before_action :authorize_user, :active_page
 
   def index
     @users = User.all.reject{|u| u.id == User.first.id}
@@ -17,7 +17,7 @@ class ControlPanel::AuthorizationController < ApplicationController
       (params[:admin].eql?(false.to_s)) ? user.grant_admin : user.revoke_admin
     end
 
-    @users = User.all
+    @users = User.all.reject{|u| u.id == User.first.id}
     render :layout=>false
   end
 
@@ -25,6 +25,14 @@ class ControlPanel::AuthorizationController < ApplicationController
 
   def authorize_user
     not_found unless current_user.admin?
+  end
+
+
+  def active_page
+    @active_link = control_panel_authorization_index_path
+    @page_icon = "fa fa-users"
+    @page_heading = "Users"
+    @page_desc = "authorization"
   end
 
 end

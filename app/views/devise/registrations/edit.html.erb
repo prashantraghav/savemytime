@@ -1,0 +1,40 @@
+<div class="login-panel panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Change Password</h3>
+  </div>
+  <div class="panel-body">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+
+    <div class="form-group input-group">
+      <%= f.email_field :email, autofocus: true , :class=>'form-control', :placeholder=>'Email', :readonly=>true %>
+      <span class="input-group-addon">@</span>
+    </div>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <% end %>
+
+    <div class="form-group input-group">
+      <%= f.password_field :password, autocomplete: "off", :class=>'form-control', :placeholder=>"Password (#{@minimum_password_length || "No" } characters minimum)" %>
+      <span class="input-group-addon"><i class="fa fa-eye-slash"></i></span>
+    </div>
+
+    <div class="form-group input-group">
+      <%= f.password_field :password_confirmation, autocomplete: "off", :class=>'form-control', :placeholder=>'Confirm Password' %>
+      <span class="input-group-addon"><i class="fa fa-eye-slash"></i></span>
+    </div>
+
+    <div class="form-group input-group">
+      <%= f.password_field :current_password, autocomplete: "off", :class=>'form-control', :placeholder=>'Current Password' %>
+      <span class="input-group-addon"><i class="fa fa-eye-slash"></i></span>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Update", :class=>'btn btn-primary btn-block' %>
+    </div>
+  <% end %>
+  </div>
+</div>
+<p>
+<%= link_to "Back", :back , :class=>'btn btn-info btn-block'%>
+</p>

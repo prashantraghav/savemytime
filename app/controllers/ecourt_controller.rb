@@ -1,5 +1,5 @@
 class EcourtController < ApplicationController
-  before_action :get_states
+  before_action :get_states, :active_page
 
   def index
     @results = Hash.new
@@ -30,6 +30,8 @@ class EcourtController < ApplicationController
      court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'], :court_code=>params['court_code']}
      e = Ecourt.new(court_params)
      @details = e.get_details(params['caseno'].match(/[0-9]*$/).to_s, params['cino'])
+
+     render :layout=>false
   end
 
 
@@ -72,5 +74,12 @@ class EcourtController < ApplicationController
     end
 
     return results
+  end
+
+  def active_page
+    @active_link = ecourt_path
+    @page_icon = "fa fa-university"
+    @page_heading = "Ecourt"
+    @page_desc = "parsing"
   end
 end

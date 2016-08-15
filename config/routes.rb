@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  root :to=>'ecourt#index'
+
   namespace :control_panel do
     get 'stats/index'
   end

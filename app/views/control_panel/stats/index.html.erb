@@ -1,51 +1,70 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-    <h3>My Searches </h3><hr/>
-
+    <h3><i class="fa fa-search"></i> My Searches </h3><hr/>
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Today: </strong> <%= @my_searches[:today] %> </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Yesterday: </strong> <%= @my_searches[:yesterday] %> </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>This Week: </strong> <%= @my_searches[:this_week] %> </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Last Week: </strong> <%= @my_searches[:last_week] %> </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>This Month: </strong> <%= @my_searches[:this_month] %> </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  <strong>Total: </strong> <%= @my_searches[:total] %> </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_searches[:today], :day=>'Today' %>
+  </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:yesterday], :day=>'Yesterday' %>
+  </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'yellow', :number=>@my_searches[:this_week], :day=>'This Week' %>
+  </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2"> 
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'red', :number=>@my_searches[:last_week], :day=>'Last Week' %>
+  </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'info', :number=>@my_searches[:this_month], :day=>'This Month' %>
+  </div>
+  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+    <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_searches[:total], :day=>'Total' %>
+  </div>
 </div>
 <br/>
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-    <h3>Searches By Users </h3><hr/>
+    <h3> <i class="fa fa-users"></i> Searches By Users </h3><hr/>
   </div>
 </div>
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-<table class="table table-responsive" id="users_searches">
-  <thead>
-    <tr>
-      <th>User Email</th>
-      <th>Today</th>
-      <th>Yesterday</th>
-      <th>This Week</th>
-      <th>Last Week</th>
-      <th>This Month</th>
-      <th>Total</th>
-    </tr>
-  </thead>
-  <tbody>
-  <% @users.each do |user| %>
-    <tr>
-    <td><%= user.email %></td>  
-    <td><%= user.searches.today.count %></td>  
-    <td><%= user.searches.yesterday.count %></td>  
-    <td><%= user.searches.this_week.count %></td>  
-    <td><%= user.searches.last_week.count %></td>  
-    <td><%= user.searches.this_month.count %></td>  
-    <td><%= user.searches.count %></td>  
-  </tr>
-  <% end %>
- </tbody>
-</table>
-
+    <table class="table table-responsive" id="users_searches">
+      <thead>
+        <tr>
+          <th>User Email</th>
+          <th>Today</th>
+          <th>Yesterday</th>
+          <th>This Week</th>
+          <th>Last Week</th>
+          <th>This Month</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+        <tr>
+          <td><%= user.email %></td>  
+          <td><%= user.searches.today.count %></td>  
+          <td><%= user.searches.yesterday.count %></td>  
+          <td><%= user.searches.this_week.count %></td>  
+          <td><%= user.searches.last_week.count %></td>  
+          <td><%= user.searches.this_month.count %></td>  
+          <td><%= user.searches.count %></td>  
+        </tr>
+        <% end %>
+        <tr>
+          <td> Total </td>  
+          <td><%= @searches[:today] %></td>  
+          <td><%= @searches[:yesterday] %></td>  
+          <td><%= @searches[:this_week] %></td>  
+          <td><%= @searches[:last_week] %></td>  
+          <td><%= @searches[:this_month] %></td>  
+          <td><%= @searches[:total] %></td>  
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

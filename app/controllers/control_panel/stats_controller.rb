@@ -1,6 +1,6 @@
 class ControlPanel::StatsController < ApplicationController
   
-  before_action :all_searches, :my_searches
+  before_action :all_searches, :my_searches, :active_page
   
   def index
     @users = User.all.reject{|u| u.id == User.first.id}
@@ -28,5 +28,13 @@ class ControlPanel::StatsController < ApplicationController
                     :last_month=>current_user.searches.last_month.count, 
                     :today=>current_user.searches.today.count
     }
+  end
+
+
+  def active_page
+    @active_link = control_panel_stats_index_path
+    @page_icon = "fa fa-bar-chart"
+    @page_heading = "Stats"
+    @page_desc = "Searches overview"
   end
 end
