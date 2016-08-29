@@ -1,33 +1,34 @@
-<table class="table table-responsive" id="users_list">
-  <thead>
-    <tr>
-      <th>User Email</th>
-      <th>Locked</th>
-      <th>Admin?</th>
-      <th>Last Login</th>
-      <th>Created On</th>
+<div class="table-responsive">
+  <table class="table" id="users_list">
+    <thead>
+      <tr>
+        <th>User Email</th>
+        <th>Locked</th>
+        <th>Admin?</th>
+        <th>Last Login</th>
+        <th>Created On</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% users_list.each do |user| %>
+      <tr>
+      <td><%= user.email %></td>  
+      <td>
+        <label>
+          <input type="checkbox" class="lock" update="<%= control_panel_authorization_update_path(user.id) %>" value="<%= (user.access_locked?) ? true : false %>" 
+          <%= (user.access_locked?) ? "checked" : "" %> >
+        </label>
+      </td>  
+      <td>
+        <label> 
+          <input type="checkbox" class="admin" update="<%= control_panel_authorization_update_path(user.id) %>" value="<%= (user.admin?) ? true : false %>" 
+          <%= (user.admin?) ? "checked" : "" %> >
+        </label>
+      </td>  
+      <td><%= user.last_sign_in_at %></td>  
+      <td><%= user.created_at %></td>  
     </tr>
-  </thead>
-  <tbody>
-  <% users_list.each do |user| %>
-    <tr>
-    <td><%= user.email %></td>  
-    <td>
-      <label>
-        <input type="checkbox" class="lock" update="<%= control_panel_authorization_update_path(user.id) %>" value="<%= (user.access_locked?) ? true : false %>" 
-        <%= (user.access_locked?) ? "checked" : "" %> >
-      </label>
-    </td>  
-    <td>
-      <label> 
-        <input type="checkbox" class="admin" update="<%= control_panel_authorization_update_path(user.id) %>" value="<%= (user.admin?) ? true : false %>" 
-        <%= (user.admin?) ? "checked" : "" %> >
-      </label>
-    </td>  
-    <td><%= user.last_sign_in_at %></td>  
-    <td><%= user.created_at %></td>  
-  </tr>
   <% end %>
- </tbody>
-</table>
-
+    </tbody>
+  </table>
+</div>

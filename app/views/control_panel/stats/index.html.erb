@@ -4,22 +4,22 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_searches[:today], :day=>'Today' %>
   </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:yesterday], :day=>'Yesterday' %>
   </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'yellow', :number=>@my_searches[:this_week], :day=>'This Week' %>
   </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2"> 
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2"> 
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'red', :number=>@my_searches[:last_week], :day=>'Last Week' %>
   </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'info', :number=>@my_searches[:this_month], :day=>'This Month' %>
   </div>
-  <div class="col-xs-2 col-sm-2 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
     <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_searches[:total], :day=>'Total' %>
   </div>
 </div>
@@ -31,21 +31,22 @@
 </div>
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-    <table class="table table-responsive" id="users_searches">
-      <thead>
-        <tr>
-          <th>User Email</th>
-          <th>Today</th>
-          <th>Yesterday</th>
-          <th>This Week</th>
-          <th>Last Week</th>
-          <th>This Month</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="table-responsive">
+      <table class="table table-responsive" id="users_searches">
+        <thead>
+          <tr>
+            <th>User Email</th>
+            <th>Today</th>
+            <th>Yesterday</th>
+            <th>This Week</th>
+            <th>Last Week</th>
+            <th>This Month</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
         <% @users.each do |user| %>
-        <tr>
+          <tr>
           <td><%= user.email %></td>  
           <td><%= user.searches.today.count %></td>  
           <td><%= user.searches.yesterday.count %></td>  
@@ -54,7 +55,7 @@
           <td><%= user.searches.this_month.count %></td>  
           <td><%= user.searches.count %></td>  
         </tr>
-        <% end %>
+      <% end %>
         <tr>
           <td> Total </td>  
           <td><%= @searches[:today] %></td>  
@@ -64,7 +65,8 @@
           <td><%= @searches[:this_month] %></td>  
           <td><%= @searches[:total] %></td>  
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
