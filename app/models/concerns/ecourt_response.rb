@@ -37,6 +37,8 @@ class EcourtResponse
   private
 
   def set_url
+    Rails.logger.info "Setting Ecourt URLs - #{Time.now}" unless Rails.env.production?
+
     @uri = URI('http://services.ecourts.gov.in')
     @get_url = "/ecourtindia/cases/ki_petres.php?state_cd=#{@state_code}&dist_cd=#{@dist_code}&appFlag=web"
     @captcha_url = "/ecourtindia/cases/image_captcha.php"
@@ -45,12 +47,16 @@ class EcourtResponse
   end
 
   def get_request
+    Rails.logger.info "Get Request - #{Time.now}" unless Rails.env.production?
+
     @http = Net::HTTP.start(@uri.host, @uri.port)
     @get_resp = @http.request_get @get_url
     @cookie = @get_resp['set-cookie'].split(';')[0]
   end
 
   def parse_captcha
+    Rails.logger.info "Parsing Captcha - #{Time.now}" unless Rails.env.production?
+
     local_captcha_path = "#{Rails.root}/public/ecourt/captcha.png"
     req = Net::HTTP::Get.new(@captcha_url)
     req.add_field('cookie', @cookie)
@@ -67,10 +73,15 @@ class EcourtResponse
 
 
   def post_request
+    Rails.logger.info "Post Request - #{Time.now}" unless Rails.env.production?
+
     req = Net::HTTP::Post.new(@post_url)
     req.add_field('cookie', @cookie)
     req.set_form_data(post_params)
     resp = @http.request req
+
+    Rails.logger.info "Post Response Code - #{resp.code} - #{Time.now}" unless Rails.env.production?
+
     raise EcourtResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 and resp.body.match(/#{@name}/i)
     resp
   end

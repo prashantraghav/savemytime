@@ -54,7 +54,8 @@ class EcourtController < ApplicationController
   def get_result
     results = {:complex=>Hash.new, :establishment=>Hash.new}
     courts = get_courts
-    search = current_user.searches.create(:params=>params)
+    search = current_user.searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
+
     params["court_complex"].try(:each) do |i, court|
       results[:complex][court["code"]] = {:name=>court["name"], :results=>Hash.new}
       params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
