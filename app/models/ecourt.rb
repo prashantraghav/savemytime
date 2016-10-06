@@ -2,6 +2,8 @@ class Ecourt < ActiveRecord::Base
   self.inheritance_column = :court_type
   attr_reader :response_body
 
+  scope :successful_response, ->{where(:response_code=>200)}
+    
   def get_details(caseno, cino)
     court_params = {:state_code=>state_code, :dist_code=>dist_code, :court_code=>court_code}
     e = EcourtResponse.new(court_params)

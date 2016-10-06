@@ -1,72 +1,180 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+    <h3><i class="fa fa-filter"></i> Filter By </h3>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+    <%= form_tag("", :method=>:get) do%>
+      <label><input type="radio" name="filter_by" value="today" <%= (@filter_by.eql?("today"))? "checked" : "" %> > Today</label> &nbsp;
+      <label><input type="radio" name="filter_by" value="yesterday"  <%= (@filter_by.eql?("yesterday"))? "checked" : "" %> > Yesterday</label> &nbsp;
+      <label><input type="radio" name="filter_by" value="this_month" <%= (@filter_by.eql?("this_month"))? "checked" : "" %> > This Month</label> &nbsp;
+      <label><input type="radio" name="filter_by" value="last_month" <%= (@filter_by.eql?("last_month"))? "checked" : "" %> > Last Month</label> &nbsp; | &nbsp;
+      <label><input type="radio" name="filter_by" value="between_date" <%= (@filter_by.eql?("between_date"))? "checked" : "" %> > Date </label> &nbsp;
+      <input type="text" class="datepicker" name="filter_from_date" value="<%= params[:filter_from_date] %>" <%= (!@filter_by.eql?("between_date"))? "disabled='disabled'" : "" %> />
+      <input type="text" class="datepicker" name="filter_to_date" value="<%= params[:filter_to_date] %>" <%= (!@filter_by.eql?("between_date"))? "disabled='disabled'" : "" %> />
+      <input type="submit" class="btn btn-default" value="Go"/>
+    <% end %>
+  </div>
+</div>
+<hr/>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
     <h3><i class="fa fa-search"></i> My Searches </h3><hr/>
   </div>
 </div>
+
 <div class="row">
+
   <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_searches[:today], :day=>'Today' %>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">  
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_searches[:all][:total], :day=>'Total' %>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer"><center>All</center></div>
+    </div>
   </div>
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:yesterday], :day=>'Yesterday' %>
+
+  <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:successful][:total], :day=>'Total' %>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:successful][:of_mumbai][:total], :day=>'Mumbai' %>
+          </div>
+          <!-- <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
+            <% number = "#{@my_searches[:successful][:of_mumbai][:count]} <small style='font-size:16px'>(#{@my_searches[:successful][:of_mumbai][:total]}/6)</small>" %>
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>number, :day=>'Count of Mumbai' %>
+          </div> -->
+        </div>
+      </div>
+      <div class="panel-footer"><center>Successful</center></div>
+    </div>
   </div>
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'yellow', :number=>@my_searches[:this_week], :day=>'This Week' %>
-  </div>
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2"> 
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'red', :number=>@my_searches[:last_week], :day=>'Last Week' %>
-  </div>
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'info', :number=>@my_searches[:this_month], :day=>'This Month' %>
-  </div>
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
-    <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_searches[:total], :day=>'Total' %>
+
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">  
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">  
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_searches[:chargable], :day=>'Count' %>
+            <center style="margin-top:-20px;"><a href="#" data-toggle="modal" data-target="#calcluateModal"><small>How this calculated?</small></a></center>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer"><center>Chargable </center></div>
+    </div>
   </div>
 </div>
 <br/>
+
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
     <h3> <i class="fa fa-users"></i> Searches By Users </h3><hr/>
   </div>
 </div>
+
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
     <div class="table-responsive">
-      <table class="table table-responsive" id="users_searches">
-        <thead>
+      <table class="table table-responsive table-bordered" id="users_searches">
+        <thead >
           <tr>
             <th>User Email</th>
-            <th>Today</th>
-            <th>Yesterday</th>
-            <th>This Week</th>
-            <th>Last Week</th>
-            <th>This Month</th>
-            <th>Total</th>
+            <th><center>All</center></th>
+            <th colspan=2><center>Successful</center></th>
+            <th><center>Chargable</center></th>
+          </tr>
+          <tr>
+            <th></th>
+            <th><center>Total</center></th>
+            <th><center>Total</center></th>
+            <th><center>Mumbai</center></th>
+            <th><center>Count</center></th>
           </tr>
         </thead>
         <tbody>
         <% @users.each do |user| %>
+          <% searches = user.searches.send(@filter_by.to_sym, *@filter_params) %>
           <tr>
-          <td><%= user.email %></td>  
-          <td><%= user.searches.today.count %></td>  
-          <td><%= user.searches.yesterday.count %></td>  
-          <td><%= user.searches.this_week.count %></td>  
-          <td><%= user.searches.last_week.count %></td>  
-          <td><%= user.searches.this_month.count %></td>  
-          <td><%= user.searches.count %></td>  
-        </tr>
-      <% end %>
-        <tr>
-          <td> Total </td>  
-          <td><%= @searches[:today] %></td>  
-          <td><%= @searches[:yesterday] %></td>  
-          <td><%= @searches[:this_week] %></td>  
-          <td><%= @searches[:last_week] %></td>  
-          <td><%= @searches[:this_month] %></td>  
-          <td><%= @searches[:total] %></td>  
-        </tr>
+            <td><%= user.email %></td>  
+            <td><center><%= searches.count %></center></td>  
+            <td><center><%= searches.successful.count %></center></td>  
+            <td><center><%= searches.successful.of_mumbai.count %></center></td>  
+            <td><center><%= searches.chargable_count %></center></td>  
+          </tr>
+         <% end %>
+          <tr>
+            <td> All </td>  
+            <td><center><%= @searches[:all][:total] %></center></td>  
+            <td><center><%= @searches[:successful][:total] %></center></td>  
+            <td><center><%= @searches[:successful][:of_mumbai][:total] %></center></td>  
+            <td><center><%= @searches[:chargable] %></center></td>  
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
+
+<div id="calcluateModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Chargable Searches Calculation</h4>
+      </div>
+      <div class="modal-body">
+        <div style="font-weight: normal">
+          <p><i class="fa fa-hand-o-right"></i> Only successful searches are chargable</p>
+          <div>Total Searches - <%= @my_searches[:successful][:total] %> </div>
+          <div>Mumbai Searches - <%= @my_searches[:successful][:of_mumbai][:total] %> </div><br/>
+          <p> Chargable Searches = (Total Searches - Mumbai Searches) + (Mumbai Searches / 6) </p>
+          <p>
+            (<%= @my_searches[:successful][:total] %> - <%= @my_searches[:successful][:of_mumbai][:total] %>) + (<%= @my_searches[:successful][:of_mumbai][:total] / 6 %>) = <%= @my_searches[:chargable] %>
+          </p>
+        </div>
+        <p>Chargable Searches - <%= @my_searches[:chargable] %> </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+  $.noConflict();
+
+  $('.datepicker').datepicker({format: 'dd-mm-yyyy'}).on('show', function(e){
+    $('.datepicker-dropdown').css('top', '256px')
+  });
+  
+  $('body').on('click', "input[name='filter_by']", function(){
+    if($(this).val()!='between_date'){
+      $('.datepicker').attr('disabled', true)
+    }else{
+      $('.datepicker').removeAttr('disabled')
+    }
+  });
+
+  $('form').submit(function(){
+    if($("input[name='filter_by']:checked").val() !='between_date'){
+      $('.datepicker').val('')
+    }
+    return true;
+  });
+
+})
+
+</script>
