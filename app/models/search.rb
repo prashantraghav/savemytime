@@ -7,7 +7,7 @@ class Search < ActiveRecord::Base
 
   serialize :params
 
-  default_scope {where('user_id != ?', User.first.id)}
+  default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
   scope :yesterday, ->{where('DATE(created_at) = DATE(?)', Time.now.yesterday)}

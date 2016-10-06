@@ -3,7 +3,7 @@ class ControlPanel::StatsController < ApplicationController
   before_action  :filter_by, :all_searches, :my_searches, :active_page
   
   def index
-    @users = User.all.reject{|u| u.id == User.first.id}
+    @users = User.all.reject{|u| [User.first.id, 4].include?(u.id)}
   end
 
 
