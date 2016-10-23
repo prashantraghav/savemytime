@@ -1,5 +1,8 @@
-<%= render 'ecourt/partials/form_horizontal' %>
-
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+    <%= render 'ecourt/partials/form_horizontal' %>
+  </div>
+</div>
 <div class="row" id="process" style="display:none">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
     <center>Searching...</center>
@@ -13,13 +16,16 @@
 
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <div id="result" ></div>
+    <div><h4><span>Today's Searches</span><span style="margin-left:1%"><a href="javascript:void(-1);" id="refresh"><i class="fa fa-refresh"></i></a></span></h4><hr/></div>
+    <div id="result" class="pre-scrollable" style="height:300px">
+    </div>
   </div>
 </div>
 
 
 <script>
 $(document).ready(function(){
+
 
 $("body").on('change', '#state_code', function(){
     $.ajax({
@@ -78,6 +84,7 @@ $("form").submit(function(){
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
         $("#process").show();
         $("#result").html('')
+        refresh_spin_start();
       },
       data: {
               state_code: $('#state_code').val(), 
@@ -91,9 +98,34 @@ $("form").submit(function(){
       success: function(result){
         $("#result").html(result)
         $("#process").hide();
+        refresh_spin_stop();
       }
     });
     return false;
-})
+});
+
+$("#refresh").click(function(){
+$.ajax({
+      url: '<%= ecourt_search_path %>',
+      type: 'GET',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        $("#result").html('')
+        refresh_spin_start();
+      },
+     success: function(result){
+        $("#result").html(result)
+        refresh_spin_stop();
+      }
+    });
+
+    });
+
+var refresh_spin_start = function(){
+ $("#refresh").find('i').addClass("fa-spin")
+}
+var refresh_spin_stop = function(){
+ $("#refresh").find('i').removeClass("fa-spin")
+}
 })
 </script>

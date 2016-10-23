@@ -1,22 +1,8 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-    <h3><i class="fa fa-filter"></i> Filter By </h3>
-  </div>
-  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-    <%= form_tag("", :method=>:get) do%>
-      <label><input type="radio" name="filter_by" value="today" <%= (@filter_by.eql?("today"))? "checked" : "" %> > Today</label> &nbsp;
-      <label><input type="radio" name="filter_by" value="yesterday"  <%= (@filter_by.eql?("yesterday"))? "checked" : "" %> > Yesterday</label> &nbsp;
-      <label><input type="radio" name="filter_by" value="this_month" <%= (@filter_by.eql?("this_month"))? "checked" : "" %> > This Month</label> &nbsp;
-      <label><input type="radio" name="filter_by" value="last_month" <%= (@filter_by.eql?("last_month"))? "checked" : "" %> > Last Month</label> &nbsp; | &nbsp;
-      <label><input type="radio" name="filter_by" value="between_date" <%= (@filter_by.eql?("between_date"))? "checked" : "" %> > Date </label> &nbsp;
-      <input type="text" class="datepicker" name="filter_from_date" value="<%= params[:filter_from_date] %>" <%= (!@filter_by.eql?("between_date"))? "disabled='disabled'" : "" %> placeholder="from"/>
-      <input type="text" class="datepicker" name="filter_to_date" value="<%= params[:filter_to_date] %>" <%= (!@filter_by.eql?("between_date"))? "disabled='disabled'" : "" %> placeholder="to"/>
-      <input type="submit" class="btn btn-default" value="Go"/>
-    <% end %>
+    <%= render 'shared/filter_by_form' %>
   </div>
 </div>
-<hr/>
-
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
     <h3><i class="fa fa-search"></i> My Searches </h3><hr/>
@@ -151,30 +137,3 @@
 
   </div>
 </div>
-
-<script>
-$(document).ready(function(){
-  $.noConflict();
-
-  $('.datepicker').datepicker({format: 'dd-mm-yyyy'}).on('show', function(e){
-    $('.datepicker-dropdown').css('top', '256px')
-  });
-  
-  $('body').on('click', "input[name='filter_by']", function(){
-    if($(this).val()!='between_date'){
-      $('.datepicker').attr('disabled', true)
-    }else{
-      $('.datepicker').removeAttr('disabled')
-    }
-  });
-
-  $('form').submit(function(){
-    if($("input[name='filter_by']:checked").val() !='between_date'){
-      $('.datepicker').val('')
-    }
-    return true;
-  });
-
-})
-
-</script>

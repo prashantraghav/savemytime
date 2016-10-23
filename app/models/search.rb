@@ -7,6 +7,8 @@ class Search < ActiveRecord::Base
 
   serialize :params
 
+  before_create :set_status
+
   default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
@@ -48,6 +50,44 @@ class Search < ActiveRecord::Base
 
   def free?
     (created_at.to_date >= Date.new(2016, 8, 1) && created_at.to_date <= Date.new(2016, 8, 15))
+  end
+
+
+  def get_result
+    processing
+        
+    params["court_complex"].try(:each) do |i, court|
+      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
+        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
+        e = court_complexes.new(court_params).result
+      end
+    end
+
+    params["court_establishment"].try(:each) do |i, court|
+      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
+        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
+        e = court_establishments.new(court_params).result
+      end
+    end
+
+    completed
+  end
+
+  private
+
+  def processing
+    self.status="processing"
+    self.save
+  end
+
+  def completed
+    self.status="completed"
+    self.save
+  end
+
+
+  def set_status
+    self.status = "created"
   end
 
 end

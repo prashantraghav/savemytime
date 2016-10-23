@@ -1,0 +1,22 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Name</th>
+      <th>Dist</th>
+      <th>State</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% searches.each do |search| %>
+    <tr>
+      <td><%= search.id %></td>
+      <td><%= search.params["name"] %></td>
+      <td><%= get_dist(search.params["dist_code"])['name'] %></td>
+      <td><%= search.params["state_code"] %></td>
+      <td><%= link_to "View Result", search_path(search)%></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

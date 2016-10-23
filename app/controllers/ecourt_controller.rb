@@ -18,11 +18,9 @@ class EcourtController < ApplicationController
 
   def search
     @court_name = params['court_name']
-    time_started = Time.now
     @state_code, @dist_code = params['state_code'], params['dist_code']
-    @results = get_result
-    time_taken = Time.now - time_started
-    @time = time_taken.divmod(60)
+    perform_search if request.post?
+    @searches = Search.today.order(:id=>:desc)
     render :layout=>false
   end
 
@@ -51,30 +49,10 @@ class EcourtController < ApplicationController
     {:establishment => dist['court_establishment'], :complex=>dist['court_complex']}
   end
 
-  def get_result
-    results = {:complex=>Hash.new, :establishment=>Hash.new}
+  def perform_search
     courts = get_courts
     search = current_user.searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
-
-    params["court_complex"].try(:each) do |i, court|
-      results[:complex][court["code"]] = {:name=>court["name"], :results=>Hash.new}
-      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
-        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = search.court_complexes.new(court_params).result
-      	results[:complex][court["code"]][:results][year]=e.response_body
-      end
-    end
-
-    params["court_establishment"].try(:each) do |i, court|
-      results[:establishment][court["code"]] = {:name=>court["name"], :results=>Hash.new}
-      params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
-        court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = search.court_establishments.new(court_params).result
-      	results[:establishment][court["code"]][:results][year]=e.response_body
-      end
-    end
-
-    return results
+    search.delay.get_result
   end
 
   def active_page

@@ -29,6 +29,9 @@
       <li class="<%= @active_link == ecourt_path ? "active" : "" %>">
         <%= link_to ecourt_path do %> <i class="fa fa-university"></i> Ecourt <% end %>
       </li>
+      <li class="<%= @active_link == searches_path ? "active" : "" %>">
+        <%= link_to searches_path do %> <i class="fa fa-search"></i> Searches <% end %>
+      </li>
       <li class="<%= @active_link == control_panel_stats_index_path ? "active" : "" %>">
         <%= link_to control_panel_stats_index_path do %> <i class="fa fa-bar-chart"></i> Stats <% end %>
       </li>

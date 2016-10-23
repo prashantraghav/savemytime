@@ -1,0 +1,24 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Name</th>
+        <th>Dist</th>
+        <th>State</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% searches.each do |search| %>
+      <tr>
+      <td><%= search.id %></td>
+      <td><%= search.params["name"] %></td>
+      <td><%= get_dist(search.params["state_code"], search.params["dist_code"]).try(:[], 'name') %></td>
+      <td><%= get_state(search.params["state_code"]).try(:[], "name") %></td>
+      <td><%= (search.status.eql?("completed")) ? link_to("View Result", search_path(search), :target=>'_blank') : search.status %></td>
+    </tr>
+  <% end %>
+    </tbody>
+  </table>
+</div>
