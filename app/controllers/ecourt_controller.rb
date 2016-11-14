@@ -52,7 +52,7 @@ class EcourtController < ApplicationController
   def perform_search
     courts = get_courts
     search = current_user.searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
-    search.delay.get_result
+    Delayed::Job.enqueue SearchJob.new(search.id)
   end
 
   def active_page
