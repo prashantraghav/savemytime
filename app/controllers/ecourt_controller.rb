@@ -20,7 +20,7 @@ class EcourtController < ApplicationController
     @court_name = params['court_name']
     @state_code, @dist_code = params['state_code'], params['dist_code']
     perform_search if request.post?
-    @searches = Search.today.order(:id=>:desc)
+    @searches = (current_user.id == 1 ) ? Search.unscoped.today.order(:id=>:desc) : Search.today.order(:id=>:desc)
     render :layout=>false
   end
 

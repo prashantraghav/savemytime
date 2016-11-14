@@ -35,7 +35,7 @@ $("body").on('change', '#state_code', function(){
       },
       data: {state_code: $(this).val()},
       success: function(data){
-        options = '<option value="-1">Select District</option>';
+        options = '<option value="">Select District</option>';
         $.each(data, function(i, dist){options +='<option value="'+dist.code+'">'+dist.name+'</option>'})
         $("#dist_code").html(options)
       }
@@ -71,11 +71,17 @@ $("body").on('change', "#dist_code", function(){
 
 
 $("form").submit(function(){
+  $("#no_courts_selected").addClass('hide');
   court_complex=[];
   $(".court_code_arr:checked").each(function(){court_complex.push({'code': $(this).val(), 'name': $(this).attr('court-name')})})
 
   court_establishment = [];
   $(".court_code:checked").each(function(){court_establishment.push({'code': $(this).val(), 'name' : $(this).attr('court-name')})})
+  
+  if(court_complex.length < 1 && court_establishment.length < 1){
+    $("#no_courts_selected").removeClass('hide');
+    return false;
+  }
 
   $.ajax({
       url: '<%= ecourt_search_path %>',

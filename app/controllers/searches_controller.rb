@@ -4,14 +4,15 @@ class SearchesController < ApplicationController
   before_action :active_page, :get_states, :filter_by
 
   def index
-    @searches = current_user.searches.send(@filter_by.to_sym, *@filter_params)
+    @searches = (current_user.id == 1) ? Search.unscoped.send(@filter_by.to_sym, *@filter_params).order(:id=>:desc) 
+                                       : current_user.searches.send(@filter_by.to_sym, *@filter_params).order(:id=>:desc) 
 
     @page_heading = "Searches"
     @page_desc = "List"
   end
 
   def show
-    @search = Search.find params[:id]
+    @search = Search.unscoped.find params[:id]
     @state_code  = @search.state_code
     @dist_code  = @search.dist_code
 

@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <% searches.each do |search| %>
-      <tr>
+      <tr class="<%= (search.user.id == 1) ? 'active' : '' %>">
       <td><%= search.id %></td>
       <td><%= search.params["name"] %></td>
       <td><%= get_dist(search.params["state_code"], search.params["dist_code"]).try(:[], 'name') %></td>
