@@ -11,16 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161022185658) do
-
-  create_table "bills", force: :cascade do |t|
-    t.string   "period",     limit: 255
-    t.string   "search_ids", limit: 255
-    t.integer  "payment",    limit: 4,   default: 0
-    t.boolean  "paid",                   default: false, null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-  end
+ActiveRecord::Schema.define(version: 20161211180225) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   limit: 4,     default: 0, null: false
@@ -38,7 +29,7 @@ ActiveRecord::Schema.define(version: 20161022185658) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
-  create_table "ecourts", force: :cascade do |t|
+  create_table "ecourts_results", force: :cascade do |t|
     t.integer  "state_code",    limit: 4
     t.integer  "dist_code",     limit: 4
     t.string   "court_type",    limit: 255
@@ -52,7 +43,7 @@ ActiveRecord::Schema.define(version: 20161022185658) do
     t.datetime "updated_at",                       null: false
   end
 
-  create_table "searches", force: :cascade do |t|
+  create_table "ecourts_searches", force: :cascade do |t|
     t.string   "state_code", limit: 255
     t.string   "dist_code",  limit: 255
     t.text     "params",     limit: 65535
@@ -60,6 +51,35 @@ ActiveRecord::Schema.define(version: 20161022185658) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "status",     limit: 255
+  end
+
+  create_table "supreme_court_case_numbers", force: :cascade do |t|
+    t.string   "case_type",     limit: 255
+    t.string   "case_number",   limit: 255
+    t.string   "year",          limit: 255
+    t.string   "response_code", limit: 255
+    t.text     "response_body", limit: 65535
+    t.integer  "search_id",     limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  create_table "supreme_court_case_title_results", force: :cascade do |t|
+    t.string   "title",                              limit: 255
+    t.string   "year",                               limit: 255
+    t.string   "response_code",                      limit: 255
+    t.text     "response_body",                      limit: 4294967295
+    t.integer  "supreme_court_case_title_search_id", limit: 4
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+  end
+
+  create_table "supreme_court_case_title_searches", force: :cascade do |t|
+    t.string   "status",     limit: 255
+    t.text     "params",     limit: 65535
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "users", force: :cascade do |t|

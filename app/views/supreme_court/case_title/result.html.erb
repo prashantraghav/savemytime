@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+    <ul class="nav nav-pills">
+      <% @search.results.each_with_index do |result, index| %>
+        <li class="<%= index==0 ? "active":"" %>">
+          <a data-toggle="pill" href="#result_year_<%= result.year %>"><%= result.year %><span class="badge"><%= result.response_body.count %></span></a>
+        </li>
+      <% end %>
+    </ul>
+    <div class="well">
+      <div class="tab-content">
+        <% @search.results.each_with_index do |result, index| %>
+          <div id="result_year_<%= result.year %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <% result.response_body.each do |node| %>
+                  <tr>
+                    <td><a target="_blank" href="<%= supreme_court_case_title_search_result_details_path(@search.id, result.id, node.values.first) %>"><%= raw node.text %></a></td>
+                  </tr>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

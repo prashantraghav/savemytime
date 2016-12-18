@@ -20,13 +20,13 @@ class EcourtController < ApplicationController
     @court_name = params['court_name']
     @state_code, @dist_code = params['state_code'], params['dist_code']
     perform_search if request.post?
-    @searches = (current_user.id == 1 ) ? Search.unscoped.today.order(:id=>:desc) : Search.today.order(:id=>:desc)
+    @searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
     render :layout=>false
   end
 
   def details
      court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'], :court_code=>params['court_code']}
-     e = Ecourt.new(court_params)
+     e = Ecourts::Result.new(court_params)
      @details = e.get_details(params['caseno'].match(/[0-9]*$/).to_s, params['cino'])
 
      render :layout=>false
@@ -51,8 +51,8 @@ class EcourtController < ApplicationController
 
   def perform_search
     courts = get_courts
-    search = current_user.searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
-    Delayed::Job.enqueue SearchJob.new(search.id)
+    search = current_user.ecourts_searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
+    Delayed::Job.enqueue SearchJob.new(Ecourts::Search, search.id)
   end
 
   def active_page

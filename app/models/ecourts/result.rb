@@ -1,4 +1,4 @@
-class Ecourt < ActiveRecord::Base
+class Ecourts::Result < ActiveRecord::Base
   self.inheritance_column = :court_type
   attr_reader :response_body
 

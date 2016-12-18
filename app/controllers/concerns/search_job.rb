@@ -1,5 +1,5 @@
-SearchJob = Struct.new(:id) do
+SearchJob = Struct.new(:klass, :id) do
   def perform
-    Search.unscoped.find(id).get_result
+    klass.unscoped.find(id).get_result
   end
 end

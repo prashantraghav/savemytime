@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :lockable
 
-  has_many :searches
+  has_many :ecourts_searches, :class_name=>"Ecourts::Search"
+  has_many :supreme_court_case_title_searches, :class_name=>"SupremeCourt::CaseTitle::Search"
 
   after_create :lock
   after_save :never_lock_super_admin, :never_revoke_admin_privileges_from_super_admin #super_admin is first user.

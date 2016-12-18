@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: 
+  pet_resp: 
+  year: MyString
+  response_code: MyString
+  response_body: MyText
+  supreme_court_case_title_search_id: 1
+
+two:
+  title: 
+  pet_resp: 
+  year: MyString
+  response_code: MyString
+  response_body: MyText
+  supreme_court_case_title_search_id: 1

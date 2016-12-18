@@ -1,0 +1,28 @@
+<div class="row" id="process" style="display:none">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+    <center>Searching...</center>
+  </div>
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+    <center><progress></progress></center>
+  </div>
+</div>
+
+<br/>
+
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+    <div><h4><span>Today's Searches</span><span style="margin-left:1%"><a href="javascript:void(-1);" id="refresh"><i class="fa fa-refresh"></i></a></span></h4><hr/></div>
+    <div id="result" class="pre-scrollable" style="height:300px">
+    </div>
+  </div>
+</div>
+
+<script>
+  var refresh_spin_start = function(){
+    $("#refresh").find('i').addClass("fa-spin")
+  }
+
+  var refresh_spin_stop = function(){
+    $("#refresh").find('i').removeClass("fa-spin")
+  }
+</script>

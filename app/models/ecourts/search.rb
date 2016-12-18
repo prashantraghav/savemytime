@@ -1,7 +1,7 @@
-class Search < ActiveRecord::Base
+class Ecourts::Search < ActiveRecord::Base
 
-  has_many :court_complexes, :dependent=>:destroy
-  has_many :court_establishments, :dependent=>:destroy
+  has_many :court_complexes, :dependent=>:destroy, :class_name=>'Ecourts::CourtComplex'
+  has_many :court_establishments, :dependent=>:destroy, :class_name=>'Ecourts::CourtEstablishment'
 
   belongs_to :user
 
@@ -28,8 +28,8 @@ class Search < ActiveRecord::Base
   scope :of_mumbai, ->{where("state_code=1 and dist_code in ('42', '43', '37', '23', '39', '38')")}
   scope :of_mumbai_count, ->{of_mumbai.count/6}
 
-  scope :successful, ->(from_id=Search.first.try(:id), to_id=Search.last.try(:id)){ 
-    where(:id=> Ecourt.successful_response.where('search_id between ? and ?', from_id , to_id).pluck(:search_id).uniq)
+  scope :successful, ->(from_id=Ecourts::Search.first.try(:id), to_id=Ecourts::Search.last.try(:id)){ 
+    where(:id=> Ecourts::Result.successful_response.where('search_id between ? and ?', from_id , to_id).pluck(:search_id).uniq)
   }
 
   def self.chargable_count

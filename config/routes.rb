@@ -20,6 +20,13 @@ Rails.application.routes.draw do
     put 'authorization/:id/update', :to=>"authorization#update" , :as=>'authorization_update'
   end
 
+  namespace :supreme_court do
+    get 'case_title', :to=>'case_title#index', :as=>'case_title_index'
+    match 'case_title/search', :as=>'case_title_search', :via=>[:get, :post]
+    match 'case_title/search/:id', :as=>'case_title_search_results', :via=>:get, :to=>"case_title#result"
+    match 'case_title/search/:id/result/:result_id/details/:listcause', :as=>'case_title_search_result_details', :via=>:get, :to=>"case_title#details"
+  end
+
   resources :searches, :only=>[:index, :show]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

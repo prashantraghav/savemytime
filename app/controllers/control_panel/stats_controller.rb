@@ -12,7 +12,7 @@ class ControlPanel::StatsController < ApplicationController
 
   def my_searches
     @my_searches = Hash.new
-    searches = current_user.searches.send(@filter_by.to_sym, *@filter_params)
+    searches = current_user.ecourts_searches.send(@filter_by.to_sym, *@filter_params)
 
     @my_searches[:all] = {:total=>searches.count}
 
@@ -28,7 +28,7 @@ class ControlPanel::StatsController < ApplicationController
 
   def all_searches
     @searches = Hash.new
-    searches = Search.send(@filter_by.to_sym, *@filter_params)
+    searches = Ecourts::Search.send(@filter_by.to_sym, *@filter_params)
 
     @searches[:all] = {:total=>searches.count}
 

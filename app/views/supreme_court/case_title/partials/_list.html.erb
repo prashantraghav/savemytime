@@ -1,0 +1,22 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% searches.each do |search| %>
+      <tr class="<%= (search.user.id == 1) ? 'active' : '' %>">
+      <td><%= search.id %></td>
+      <td><%= search.params["title"] %></td>
+      <td><%= search.params["from_year"] %> - <%= search.params["to_year"] %></td>
+      <td><%= (search.status.eql?("completed")) ? link_to("View Result", supreme_court_case_title_search_results_path(search), :target=>'_blank') : search.status %></td>
+    </tr>
+  <% end %>
+    </tbody>
+  </table>
+</div>

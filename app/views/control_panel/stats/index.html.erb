@@ -87,7 +87,7 @@
         </thead>
         <tbody>
         <% @users.each do |user| %>
-          <% searches = user.searches.send(@filter_by.to_sym, *@filter_params) %>
+          <% searches = user.ecourts_searches.send(@filter_by.to_sym, *@filter_params) %>
           <tr>
             <td><%= user.email %></td>  
             <td><center><%= searches.count %></center></td>  

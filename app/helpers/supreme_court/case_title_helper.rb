@@ -1,0 +1,2 @@
+module SupremeCourt::CaseTitleHelper
+end

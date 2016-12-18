@@ -37,6 +37,7 @@ gem 'tesseract-ocr'
 gem 'devise'
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'nokogiri'
 
 
 group :development, :test do
