@@ -4,6 +4,6 @@
   </div>
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <h3><i class="fa fa-search"></i> Searches <small>(<%= @searches.count %>)</small> </h3> <hr/>
-    <%= render 'searches/partials/list' , :searches=>@searches%>
+    <%= render @partial , :searches=>@searches%>
   </div>
 </div>

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'ecourt/districts', :as=>'ecourt_districts'
   get 'ecourt/courts', :as=>'ecourt_courts'
   match 'ecourt/search', :as=>'ecourt_search', :via=>[:get, :post]
+  match 'ecourt/search/:id', :as=>'ecourt_search_results', :via=>:get, :to=>"ecourt#result"
   get 'ecourt/details', :as=>'ecourt_details'
 
   namespace :control_panel do
