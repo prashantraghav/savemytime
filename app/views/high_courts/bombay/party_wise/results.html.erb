@@ -37,11 +37,11 @@
                     <td><%= @search.class.jurisdiction[juri] %></td>
                     <td>
                       <% result = results.where(:jurisdiction=>juri).where(:pet_or_res=>'P').first %>
-                      <%= link_to result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}%>
+                      <%= (result.no_of_cases > 0) ? link_to(result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}) : '0' %>
                     </td>
                     <td>
                       <% result = results.where(:jurisdiction=>juri).where(:pet_or_res=>'R').first %>
-                      <%= link_to result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}%>
+                      <%= (result.no_of_cases > 0) ? link_to(result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}) : '0' %>
                     </td>
                   </tr>
                 <% end %>
