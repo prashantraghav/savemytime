@@ -3,6 +3,7 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
   before_action :active_page
 
   def index
+    @page_desc = "Parsing"
   end
 
   def search
@@ -13,15 +14,18 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
 
   def results
     @search = HighCourts::Bombay::PartyWise::Search.unscoped.find params[:id]
+    @page_desc = "Results"
   end
 
   def result
     @result = HighCourts::Bombay::PartyWise::Result.unscoped.find params[:result_id]
+    @page_desc = "Cases"
   end
 
   def details
     search = HighCourts::Bombay::PartyWise::Search.unscoped.find params[:id]
     @details = search.results.find(params[:result_id]).details.find(params[:details_id])
+    @page_desc = "Case Details"
   end
 
   private
@@ -35,7 +39,6 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
     @active_link = high_courts_bombay_party_wise_index_path
     @page_icon = "fa fa-university"
     @page_heading = "Bombay High Court"
-    @page_desc = "parsing"
   end
 
 
