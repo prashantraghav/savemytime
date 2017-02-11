@@ -1,5 +1,7 @@
 class SupremeCourt::CaseTitleController < ApplicationController
 
+  before_action :active_page
+
   def index
   end
 
@@ -25,5 +27,13 @@ class SupremeCourt::CaseTitleController < ApplicationController
     search = current_user.supreme_court_case_title_searches.create(:params=>params)
     Delayed::Job.enqueue SearchJob.new(SupremeCourt::CaseTitle::Search, search.id)
   end
+
+  def active_page
+    @active_link = supreme_court_case_title_index_path
+    @page_icon = "fa fa-university"
+    @page_heading = "Supreme Court"
+    @page_desc = "parsing"
+  end
+
 
 end

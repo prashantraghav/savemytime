@@ -1,0 +1,66 @@
+<% @search.results.first.get_response_body.each_with_index do |table, index| %>
+  <% if table.to_s.include? 'href="casequery' %>
+  <%= raw table.to_s.gsub(/href="(.*)"/, "href='#{high_courts_bombay_party_wise_search_result_details_path(@search, @search.results.first, @search.results.first.details[index-3])}' target='_blank'") %>
+    <% end %>
+<% end %>
+
+<% benches = @search.results.pluck(:bench).uniq%>
+<div class="row">
+  <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+    <ul class="nav nav-pills">
+      <% benches.each_with_index do |bench, index| %>
+        <li class="<%= index==0 ? "active":"" %>">
+          <a data-toggle="pill" href="#bench_<%= bench %>"><%= @search.class.bench[bench]%></a>
+        </li>
+      <% end %>
+    </ul>
+    <div class="well">
+      <div class="tab-content">
+        <% benches.each_with_index do |bench, index| %>
+          <div id="bench_<%= bench %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+            <ul class="nav nav-pills">
+              <% @search.class.bench_juri[bench].split(',').each_with_index do |juri, index| %>
+                <li class="<%= index==0 ? "active":"" %>">
+                  <a data-toggle="pill" href="#juri_<%= bench %>_<%= juri %>"><%= @search.class.jurisdiction[juri]%></a>
+                </li>
+              <% end %>
+            </ul>
+            <div class="well">
+              <div class="tab-content">
+                <% @search.class.bench_juri[bench].split(',').each_with_index do |juri, index| %>
+                  <div id="juri_<%= bench %>_<%= juri %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+                    <ul class="nav nav-pills">
+                      <% @search.formatted_results[bench][juri].each_with_index do |(year, results), index| %>
+                        <li class="<%= index==0 ? "active":"" %>">
+                          <a data-toggle="pill" href="#juri_<%= bench %>_<%= juri %>_<%= year %>"><%= year %></a>
+                        </li>
+                      <% end %>
+                    </ul>
+                    <div class="well">
+                      <div class="tab-content">
+                        <% @search.formatted_results[bench][juri].each_with_index do |(year, results), index| %>
+                          <div id="juri_<%= bench %>_<%= juri %>_<%= year %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+                            <table class="table table-bordered">
+                              <% results.each do |result| %>
+                                <tr>
+                                  <td><%= @search.class.pet_and_res[result.pet_or_res] %></td>
+                                  <td><%= result.year %></td>
+                                  <td><%= result.get_response_body.size %></td>
+                                </tr>
+                              <% end %>
+                            </table>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

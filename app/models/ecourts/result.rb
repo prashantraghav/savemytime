@@ -34,7 +34,7 @@ class Ecourts::Result < ActiveRecord::Base
       resp  = EcourtResponse.new(court_params).search
     rescue => e
       Rails.logger.info "Ecourt Exception - #{e.inspect}" unless Rails.env.production?
-      resp = e.response if e.class.to_s.eql?('EcourtResponseError')
+      resp = e.response if e.class.to_s.eql?('ResponseError')
       retry unless(tries-=1).zero?
     end
 

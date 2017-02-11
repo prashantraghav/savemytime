@@ -1,0 +1,59 @@
+<% benches = @search.results.pluck(:bench).uniq%>
+<div class="row">
+  <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
+    <ul class="nav nav-pills">
+      <% benches.each_with_index do |bench, index| %>
+        <li class="<%= index==0 ? "active":"" %>">
+      <a data-toggle="pill" href="#bench_<%= bench %>"><%= @search.class.bench[bench]%></a>
+      </li>
+    <% end %>
+    </ul>
+    <div class="well">
+      <div class="tab-content">
+        <% benches.each_with_index do |bench, index| %>
+          <div id="bench_<%= bench %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+          <ul class="nav nav-pills">
+            <% @search.formatted_results[bench].each_with_index do |(year, results), index| %>
+              <li class="<%= index==0 ? "active":"" %>">
+            <a data-toggle="pill" href="#bench_<%= bench %>_<%= year %>"><%= year %></a>
+            </li>
+          <% end %>
+          </ul>
+          <div class="well">
+            <div class="tab-content">
+              <% @search.formatted_results[bench].each_with_index do |(year, results), index| %>
+                <div id="bench_<%= bench %>_<%= year %>" class="tab-pane pre-scrollable fade in <%= index == 0 ? :"active":""  %>">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Jurisdiction</th>
+                      <th>Petitioner</th>
+                      <th>Respondent</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <% @search.class.bench_juri[bench].split(',').each do |juri| %>
+                    <tr>
+                    <td><%= @search.class.jurisdiction[juri] %></td>
+                    <td>
+                      <% result = results.where(:jurisdiction=>juri).where(:pet_or_res=>'P').first %>
+                      <%= link_to result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}%>
+                    </td>
+                    <td>
+                      <% result = results.where(:jurisdiction=>juri).where(:pet_or_res=>'R').first %>
+                      <%= link_to result.no_of_cases, high_courts_bombay_party_wise_search_result_path(result.search_id, result), {"target"=>"_blank"}%>
+                    </td>
+                  </tr>
+                <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>

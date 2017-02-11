@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161211180225) do
+ActiveRecord::Schema.define(version: 20161221204654) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   limit: 4,     default: 0, null: false
@@ -51,6 +51,36 @@ ActiveRecord::Schema.define(version: 20161211180225) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "status",     limit: 255
+  end
+
+  create_table "high_courts_bombay_party_wise_details", force: :cascade do |t|
+    t.string   "link",                                    limit: 255
+    t.string   "response_code",                           limit: 255
+    t.text     "response_body",                           limit: 4294967295
+    t.integer  "high_courts_bombay_party_wise_result_id", limit: 4
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+  end
+
+  create_table "high_courts_bombay_party_wise_results", force: :cascade do |t|
+    t.string   "name",                                    limit: 255
+    t.string   "year",                                    limit: 255
+    t.string   "bench",                                   limit: 255
+    t.string   "jurisdiction",                            limit: 255
+    t.string   "pet_or_res",                              limit: 255
+    t.string   "response_code",                           limit: 255
+    t.text     "response_body",                           limit: 4294967295
+    t.integer  "high_courts_bombay_party_wise_search_id", limit: 4
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
+  end
+
+  create_table "high_courts_bombay_party_wise_searches", force: :cascade do |t|
+    t.string   "status",     limit: 255
+    t.text     "params",     limit: 65535
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "supreme_court_case_numbers", force: :cascade do |t|

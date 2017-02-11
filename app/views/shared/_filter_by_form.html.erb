@@ -4,6 +4,7 @@
     <select name="court" class="form-control">
       <option value="ecourt">Ecourt</option>
       <option value="supreme_court" <%= (params[:court] == "supreme_court") ? "selected" : "" %>>Supreme Court</option>
+      <option value="bombay_high_court" <%= (params[:court] == "bombay_high_court") ? "selected" : "" %>>Bombay High Court</option>
     </select>
   </div>
 

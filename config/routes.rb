@@ -28,6 +28,17 @@ Rails.application.routes.draw do
     match 'case_title/search/:id/result/:result_id/details', :as=>'case_title_search_result_details', :via=>:get, :to=>"case_title#details"
   end
 
+  namespace :high_courts do
+    namespace :bombay do
+      get 'party_wise', :to=>'party_wise#index', :as=>'party_wise_index'
+      match 'party_wise/search', :as=>'party_wise_search', :via=>[:get, :post]
+      match 'party_wise/search/:id', :as=>'party_wise_search_results', :via=>:get, :to=>"party_wise#results"
+      match 'party_wise/search/:id/result/:result_id/', :as=>'party_wise_search_result', :via=>:get, :to=>"party_wise#result"
+      match 'party_wise/search/:id/result/:result_id/details/:details_id', :as=>'party_wise_search_result_details', :via=>:get, :to=>"party_wise#details"
+    end
+  end
+
+
   resources :searches, :only=>[:index, :show]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

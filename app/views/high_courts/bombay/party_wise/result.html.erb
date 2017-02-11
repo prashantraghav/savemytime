@@ -1,0 +1,7 @@
+<% @result.get_response_body.each_with_index do |table, index| %>
+  <% if table.to_s.include? 'href="casequery' %>
+    <%= raw table.to_s.gsub(/href="(.*)"/, "href='#{high_courts_bombay_party_wise_search_result_details_path(@result.search_id, @result, @result.details[index-3])}' target='_blank'") %>
+  <% end %>
+<% end %>
+
+

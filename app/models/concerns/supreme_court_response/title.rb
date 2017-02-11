@@ -43,7 +43,7 @@ module SupremeCourtResponse
       req.set_form_data(post_params)
       resp = @http.request req
       Rails.logger.info "Post Response Code - #{resp.code} - #{Time.now}" unless Rails.env.production?
-      raise SupremeCourtResponse::Error.new("Failed Response", resp) unless resp.code.to_i == 200
+      raise ResponseError.new("Failed Response", resp) unless resp.code.to_i == 200
       resp
     end
 

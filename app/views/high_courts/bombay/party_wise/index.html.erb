@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <%= form_tag 'case_title', :class=>'form-horizontal' do %>
+      
+      <div class="form-group">
+        <label class="control-label col-sm-1">Bench:</label>
+        <div class="col-sm-3">
+          <label><input id="bench_01" type="checkbox" name="bench[]" checked value="01"> Bombay</label>
+        </div>
+        <div class="col-sm-3">
+          <label><input id="bench_02" type="checkbox" name="bench[]" value="02"> Aurangabad</label>
+        </div>
+        <div class="col-sm-3">
+          <label><input id="bench_03" type="checkbox" name="bench[]" value="03"> Nagpur</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-1">Title:</label>
+        <div class="col-sm-11">
+          <input id="title" type="text" name="title" class="form-control" required="required">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-1">Year:</label>
+        <div class="col-sm-5">
+          <input id="from_year" type="text" name="from_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!">
+        </div>
+        <label class="control-label col-sm-1">To</label>
+        <div class="col-sm-5">
+            <input id="to_year" type="text" name="to_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-11">
+          <button type="submit" class="btn btn-primary" style="width:100%">Submit</button>
+        </div>
+      </div>
+
+  <% end %>
+
+  </div>
+</div>
+
+<%= render 'shared/form_result' %>
+
+<script>
+$(document).ready(function(){
+  $("form").submit(function(){
+    var _benches = [];
+
+    if($("#bench_01").is(':checked'))
+      _benches.push('01');
+
+    if($("#bench_02").is(':checked'))
+      _benches.push('02');
+
+    if($("#bench_03").is(':checked'))
+      _benches.push('03');
+
+    $.ajax({
+      url: '<%= high_courts_bombay_party_wise_search_path %>',
+      type: 'POST',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        $("#process").show();
+        $("#result").html('')
+        refresh_spin_start();
+      },
+      data: {
+        title: $('#title').val(),
+        benches: _benches,
+        from_year: $('#from_year').val(),
+        to_year: $('#to_year').val(),
+      },
+      success: function(result){
+        $("#result").html(result)
+        $("#process").hide();
+        refresh_spin_stop();
+      }
+    });
+    return false;
+  });
+
+
+$("#refresh").click(function(){
+  $.ajax({
+      url: '<%= high_courts_bombay_party_wise_search_path %>',
+      type: 'GET',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        $("#result").html('')
+        refresh_spin_start();
+      },
+     success: function(result){
+        $("#result").html(result)
+        refresh_spin_stop();
+      }
+    });
+
+    });
+
+});
+</script>

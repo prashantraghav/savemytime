@@ -1,4 +1,4 @@
-class EcourtResponseError < StandardError
+class ResponseError < StandardError
   attr_reader :response
   def initialize(msg="Error occurred.", resp)
     @response = resp
