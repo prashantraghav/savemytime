@@ -5,7 +5,7 @@ class Kase < ActiveRecord::Base
 
   belongs_to :user
 
-  #default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
+  default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
   scope :yesterday, ->{where('DATE(created_at) = DATE(?)', Time.now.yesterday)}
