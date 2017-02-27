@@ -4,12 +4,13 @@ class Ecourts::Search < ActiveRecord::Base
   has_many :court_establishments, :dependent=>:destroy, :class_name=>'Ecourts::CourtEstablishment'
 
   belongs_to :user
+  belongs_to :kase
 
   serialize :params
 
   before_create :set_status
 
-  default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
+  #default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
   scope :yesterday, ->{where('DATE(created_at) = DATE(?)', Time.now.yesterday)}

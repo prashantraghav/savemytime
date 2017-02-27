@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= link_to 'New Case', new_kase_path, {:class=>'btn btn-primary'} %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= render 'shared/filter_by_form' %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 10%">No</th>
+            <th style="width: 30%">Name</th>
+            <th style="width: 15%">Years</th>
+            <th style="width: 15%">Ecourt</th>
+            <th style="width: 15%">Supreme Court</th>
+            <th style="width: 15%">Bombay High Court</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <% @kases.each do |kase| %>
+          <tr>
+          <td><%= kase.no %></td>
+          <td><%= kase.name %></td>
+          <td><%= kase.from_year.to_s+'-'+kase.to_year.to_s %></td>
+          <td>Not Available <%#= ecourt_link(kase)%></td>
+          <td><%= supreme_court_link(kase) %></td>
+          <td><%= bombay_high_court_link(kase) %></td>
+        </tr>
+      <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br>
+

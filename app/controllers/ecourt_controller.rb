@@ -1,9 +1,9 @@
 class EcourtController < ApplicationController
-  before_action :get_states, :active_page
+  before_action :get_states, :active_page, :set_kase
 
   def index
     @results = Hash.new
-    @results = get_result if request.post?
+    redirect_to ecourt_search_results_path(@kase.ecourts_search.id) if @kase.ecourts_search.present?
   end
 
   def districts
@@ -89,7 +89,7 @@ class EcourtController < ApplicationController
 
   def perform_search
     courts = get_courts
-    search = current_user.ecourts_searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params)
+    search = current_user.ecourts_searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params, :kase_id=>@kase.id)
     Delayed::Job.enqueue SearchJob.new(Ecourts::Search, search.id)
   end
 
@@ -98,5 +98,9 @@ class EcourtController < ApplicationController
     @page_icon = "fa fa-university"
     @page_heading = "Ecourt"
     @page_desc = "parsing"
+  end
+
+  def set_kase
+    @kase = Kase.find_by_no(params[:case_no]) if params[:case_no]
   end
 end

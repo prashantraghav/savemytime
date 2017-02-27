@@ -8,7 +8,7 @@ class HighCourts::Bombay::PartyWise::Result < ActiveRecord::Base
 
   def get_response_body
     body = read_attribute(:response_body)
-    (body.match(/#{name}/i)) ?  Nokogiri::HTML(response_body).css('form[name="casepfrm"] > table') : "" unless body.nil?
+    (body.match(/form name="casepfrm"/i)) ?  Nokogiri::HTML(response_body).css('form[name="casepfrm"] > table') : "" unless body.nil?
   end
 
   def get_result

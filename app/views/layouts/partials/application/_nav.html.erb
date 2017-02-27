@@ -26,17 +26,8 @@
 
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav side-nav">
-      <li class="<%= @active_link == ecourt_path ? "active" : "" %>">
-        <%= link_to ecourt_path do %> <i class="fa fa-university"></i> Ecourt <% end %>
-      </li>
-      <li class="<%= @active_link == supreme_court_case_title_index_path ? "active" : "" %>">
-        <%= link_to supreme_court_case_title_index_path do %> <i class="fa fa-university"></i> Supreme Court <% end %>
-      </li>
-      <li class="<%= @active_link == high_courts_bombay_party_wise_index_path ? "active" : "" %>">
-        <%= link_to high_courts_bombay_party_wise_index_path do %> <i class="fa fa-university"></i> Bombay High Court  <% end %>
-      </li>
-      <li class="<%= @active_link == searches_path ? "active" : "" %>">
-        <%= link_to searches_path do %> <i class="fa fa-search"></i> Searches <% end %>
+      <li class="<%= @active_link == kases_path ? "active" : "" %>">
+        <%= link_to kases_path do %> <i class="fa fa-file-text"></i> Cases <% end %>
       </li>
       <li class="<%= @active_link == control_panel_stats_index_path ? "active" : "" %>">
         <%= link_to control_panel_stats_index_path do %> <i class="fa fa-bar-chart"></i> Stats <% end %>

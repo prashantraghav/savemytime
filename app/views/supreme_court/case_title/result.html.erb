@@ -1,3 +1,21 @@
+<% unless @search.status.eql?("completed") %>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="alert alert-warning"> 
+      <div>Searching inprogress! Please visit after some time.</div> 
+    </div>
+  </div>
+</div>
+<% else %>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4>
+      <span><b>Name:</b> <%= @search.kase.name %> </span>
+      <span style="margin-left: 3%"><b>Years:</b> <%= @search.kase.from_year.to_s+" - "+@search.kase.to_year.to_s %> </span>
+    </h4>
+  </div>
+</div>
+<br/>
 <div class="row">
   <div class="col-xs-12 col-md-12 col-sm-12 col-xs-12">
     <ul class="nav nav-pills">
@@ -26,3 +44,4 @@
     </div>
   </div>
 </div>
+<% end %>

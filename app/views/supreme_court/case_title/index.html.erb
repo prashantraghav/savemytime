@@ -5,18 +5,18 @@
       <div class="form-group">
         <label class="control-label col-sm-1">Title:</label>
         <div class="col-sm-11">
-          <input id="title" type="text" name="title" class="form-control" required="required">
+          <input id="title" type="text" name="title" class="form-control" required="required" value='<%= @kase.name %>'>
         </div>
       </div>
 
       <div class="form-group">
         <label class="control-label col-sm-1">Year:</label>
         <div class="col-sm-5">
-          <input id="from_year" type="text" name="from_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!">
+          <input id="from_year" type="text" name="from_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!" value='<%= @kase.from_year %>'>
         </div>
         <label class="control-label col-sm-1">To</label>
         <div class="col-sm-5">
-            <input id="to_year" type="text" name="to_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!">
+          <input id="to_year" type="text" name="to_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!" value='<%= @kase.to_year %>'>
         </div>
       </div>
 
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<%= render 'shared/form_result' %>
+<%#= render 'shared/form_result' %>
 
 <script>
 $(document).ready(function(){
@@ -41,19 +41,21 @@ $(document).ready(function(){
       type: 'POST',
       beforeSend: function(xhr){
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        $("#process").show();
+        /*$("#process").show();
         $("#result").html('')
-        refresh_spin_start();
+        refresh_spin_start();*/
       },
       data: {
         title: $('#title').val(), 
         from_year: $('#from_year').val(),
         to_year: $('#to_year').val(),
+        case_no: '<%= @kase.no %>'
       },
       success: function(result){
-        $("#result").html(result)
+        /*$("#result").html(result)
         $("#process").hide();
-        refresh_spin_stop();
+        refresh_spin_stop();*/
+        window.location.href = '<%= supreme_court_case_title_index_path(:case_no=>@kase.no)%>'
       }
     });
     return false;

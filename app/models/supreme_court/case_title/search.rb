@@ -3,12 +3,13 @@ class SupremeCourt::CaseTitle::Search < ActiveRecord::Base
   has_many :results, :class_name=>'SupremeCourt::CaseTitle::Result', :foreign_key => "supreme_court_case_title_search_id"
 
   belongs_to :user
+  belongs_to :kase
 
   serialize :params
 
   before_create :set_status
 
-  default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
+  #default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
   scope :yesterday, ->{where('DATE(created_at) = DATE(?)', Time.now.yesterday)}
@@ -31,7 +32,7 @@ class SupremeCourt::CaseTitle::Search < ActiveRecord::Base
   end
 
   def successful?
-    (court_complexes.successful_response.present? || court_establishment.successful_response.present?) ? true : false
+    (results.successful_response.present?) ? true : false
   end
 
   def unsuccessful?

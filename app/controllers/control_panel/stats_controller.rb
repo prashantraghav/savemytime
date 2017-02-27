@@ -1,7 +1,7 @@
 class ControlPanel::StatsController < ApplicationController
   include SharedHelper
   
-  before_action  :filter_by, :all_searches, :my_searches, :active_page
+  before_action  :filter_by, :all_kases, :my_kases, :active_page
   
   def index
     @users = User.all.reject{|u| [User.first.id, 4].include?(u.id)}
@@ -10,33 +10,29 @@ class ControlPanel::StatsController < ApplicationController
 
   private
 
-  def my_searches
-    @my_searches = Hash.new
-    searches = current_user.ecourts_searches.send(@filter_by.to_sym, *@filter_params)
+  def my_kases
+    @my_kases = Hash.new
+    kases = kase_object.send(@filter_by.to_sym, *@filter_params)
 
-    @my_searches[:all] = {:total=>searches.count}
-
-    @my_searches[:successful] = { 
-        :total=>searches.successful.count,
-        :of_mumbai=>{:total=>searches.successful.of_mumbai.count, :count=>searches.successful.of_mumbai_count}
-    }
-
-    @my_searches[:chargable] = searches.chargable_count
+    @my_kases[:all] = kases.count
+    @my_kases[:successful] = kases.select{|k| k.successful?}.count
+    @my_kases[:chargable] = @my_kases[:successful]
 
   end
 
 
-  def all_searches
-    @searches = Hash.new
-    searches = Ecourts::Search.send(@filter_by.to_sym, *@filter_params)
+  def all_kases
+    @kases = Hash.new
+    kases = Kase.send(@filter_by.to_sym, *@filter_params)
 
-    @searches[:all] = {:total=>searches.count}
+    @kases[:all] = kases.count
+    @kases[:successful] = kases.select{|k| k.successful?}.count
+    @kases[:chargable] = @kases[:successful]
 
-    @searches[:successful] = { 
-        :total=>searches.successful.count,
-        :of_mumbai=>{:total=>searches.successful.of_mumbai.count, :count=>searches.successful.of_mumbai_count}
-    }
-    @searches[:chargable] = searches.chargable_count
+  end
+
+  def kase_object
+    current_user.id == 1 ? Kase.unscoped : Kase
   end
 
   def active_page

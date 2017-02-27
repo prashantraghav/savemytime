@@ -55,7 +55,7 @@ class HighCourtResponse::Bombay::PartyWise
 
     Rails.logger.info "Post Response Code - #{resp.code} - #{Time.now}" unless Rails.env.production?
 
-    raise ResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 and resp.body.match(/#{@name}/i)
+    raise ResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 #and resp.body.match(/#{@name}/i)
     resp
   end
 

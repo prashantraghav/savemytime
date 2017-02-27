@@ -3,12 +3,13 @@ class HighCourts::Bombay::PartyWise::Search < ActiveRecord::Base
   has_many :results, :class_name=>'HighCourts::Bombay::PartyWise::Result', :foreign_key => "high_courts_bombay_party_wise_search_id"
 
   belongs_to :user
+  belongs_to :kase
 
   serialize :params
 
   before_create :set_status
 
-  default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
+  #default_scope {where('user_id NOT IN (?, ?)', User.first.id, 4)}
 
   scope :today, ->{where('DATE(created_at) = DATE(?)', Time.now)}
   scope :yesterday, ->{where('DATE(created_at) = DATE(?)', Time.now.yesterday)}
@@ -22,8 +23,8 @@ class HighCourts::Bombay::PartyWise::Search < ActiveRecord::Base
   scope :on_date, ->(date){where("DATE(created_at) = DATE(?) ",  date )}
   scope :between_date, ->(from_date, to_date){where("DATE(created_at) between DATE(?) and DATE(?)",  from_date, to_date)}
 
-  scope :successful, ->(from_id=SupremeCourt::CaseTitle::Result.first.try(:id), to_id=SupremeCourt::CaseTitle::Result.last.try(:id)){ 
-    where(:id=> SupremeCourt::CaseTitle::Result.successful_response.where('supreme_court_case_title_search_id between ? and ?', from_id , to_id).pluck(:search_id).uniq)
+  scope :successful, ->(from_id=HighCourts::Bombay::PartyWise::Result.first.try(:id), to_id=HighCourts::Bombay::PartyWise::Result.last.try(:id)){ 
+    where(:id=> HighCourts::Bombay::PartyWise::Result.successful_response.where('high_courts_bombay_party_wise_search_id between ? and ?', from_id , to_id).pluck(:search_id).uniq)
   }
 
   def self.chargable_count
@@ -31,7 +32,7 @@ class HighCourts::Bombay::PartyWise::Search < ActiveRecord::Base
   end
 
   def successful?
-    (court_complexes.successful_response.present? || court_establishment.successful_response.present?) ? true : false
+    (results.successful_response.present?) ? true : false
   end
 
   def unsuccessful?

@@ -1,9 +1,11 @@
 class HighCourts::Bombay::PartyWiseController < ApplicationController
 
-  before_action :active_page
+  before_action :active_page, :set_kase
 
   def index
+    @kase = Kase.find_by_no(params[:case_no])
     @page_desc = "Parsing"
+    redirect_to high_courts_bombay_party_wise_search_results_path(@kase.high_courts_bombay_party_wise_search.id) if @kase.high_courts_bombay_party_wise_search.present?
   end
 
   def search
@@ -26,12 +28,13 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
     search = HighCourts::Bombay::PartyWise::Search.unscoped.find params[:id]
     @details = search.results.find(params[:result_id]).details.find(params[:details_id])
     @page_desc = "Case Details"
+    render :layout=>false
   end
 
   private
 
   def perform_search
-    search = current_user.high_courts_bombay_party_wise_searches.create(:params=>params)
+    search = current_user.high_courts_bombay_party_wise_searches.create(:params=>params, :kase_id=>@kase.id)
     Delayed::Job.enqueue SearchJob.new(HighCourts::Bombay::PartyWise::Search, search.id)
   end
 
@@ -41,6 +44,8 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
     @page_heading = "Bombay High Court"
   end
 
-
+  def set_kase
+    @kase = Kase.find_by_no(params[:case_no]) if params[:case_no]
+  end
 
 end

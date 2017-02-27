@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
 
-  root :to=>'ecourt#index'
+  resources :cases, :to=>'kases', :as=>'kases'
+
+  root :to=>'cases#index'
 
   namespace :control_panel do
     get 'stats/index'

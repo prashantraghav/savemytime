@@ -11,12 +11,12 @@
 
 <div class="row">
 
-  <div class="col-xs-12 col-sm-12 col-lg-2 col-md-2">  
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">  
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">  
-            <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_searches[:all][:total], :day=>'Total' %>
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'primary', :number=>@my_kases[:all], :day=>'Total' %>
           </div>
         </div>
       </div>
@@ -24,20 +24,13 @@
     </div>
   </div>
 
-  <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">  
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
-            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:successful][:total], :day=>'Total' %>
+          <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">  
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_kases[:successful], :day=>'Total' %>
           </div>
-          <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
-            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>@my_searches[:successful][:of_mumbai][:total], :day=>'Mumbai' %>
-          </div>
-          <!-- <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">  
-            <% number = "#{@my_searches[:successful][:of_mumbai][:count]} <small style='font-size:16px'>(#{@my_searches[:successful][:of_mumbai][:total]}/6)</small>" %>
-            <%= render 'control_panel/stats/partials/panel', :panel_class=>'green', :number=>number, :day=>'Count of Mumbai' %>
-          </div> -->
         </div>
       </div>
       <div class="panel-footer"><center>Successful</center></div>
@@ -49,7 +42,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">  
-            <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_searches[:chargable], :day=>'Count' %>
+            <%= render 'control_panel/stats/partials/panel', :panel_class=>'danger', :number=>@my_kases[:chargable], :day=>'Count' %>
             <center style="margin-top:-20px;"><a href="#" data-toggle="modal" data-target="#calcluateModal"><small>How this calculated?</small></a></center>
           </div>
         </div>
@@ -74,34 +67,25 @@
           <tr>
             <th>User Email</th>
             <th><center>All</center></th>
-            <th colspan=2><center>Successful</center></th>
+            <th ><center>Successful</center></th>
             <th><center>Chargable</center></th>
           </tr>
-          <tr>
-            <th></th>
-            <th><center>Total</center></th>
-            <th><center>Total</center></th>
-            <th><center>Mumbai</center></th>
-            <th><center>Count</center></th>
-          </tr>
-        </thead>
+         </thead>
         <tbody>
         <% @users.each do |user| %>
-          <% searches = user.ecourts_searches.send(@filter_by.to_sym, *@filter_params) %>
+          <% kases = user.kases.send(@filter_by.to_sym, *@filter_params) %>
           <tr>
             <td><%= user.email %></td>  
-            <td><center><%= searches.count %></center></td>  
-            <td><center><%= searches.successful.count %></center></td>  
-            <td><center><%= searches.successful.of_mumbai.count %></center></td>  
-            <td><center><%= searches.chargable_count %></center></td>  
+            <td><center><%= kases.count %></center></td>  
+            <td><center><%= success_count = kases.select{|k| k.successful?}.count %></center></td>  
+            <td><center><%= success_count %></center></td>  
           </tr>
          <% end %>
           <tr>
             <td> All </td>  
-            <td><center><%= @searches[:all][:total] %></center></td>  
-            <td><center><%= @searches[:successful][:total] %></center></td>  
-            <td><center><%= @searches[:successful][:of_mumbai][:total] %></center></td>  
-            <td><center><%= @searches[:chargable] %></center></td>  
+            <td><center><%= @kases[:all]%></center></td>  
+            <td><center><%= @kases[:successful]%></center></td>  
+            <td><center><%= @kases[:chargable] %></center></td>  
           </tr>
         </tbody>
       </table>
@@ -121,14 +105,11 @@
       <div class="modal-body">
         <div style="font-weight: normal">
           <p><i class="fa fa-hand-o-right"></i> Only successful searches are chargable</p>
-          <div>Total Searches - <%= @my_searches[:successful][:total] %> </div>
-          <div>Mumbai Searches - <%= @my_searches[:successful][:of_mumbai][:total] %> </div><br/>
-          <p> Chargable Searches = (Total Searches - Mumbai Searches) + (Mumbai Searches / 6) </p>
-          <p>
-            (<%= @my_searches[:successful][:total] %> - <%= @my_searches[:successful][:of_mumbai][:total] %>) + (<%= @my_searches[:successful][:of_mumbai][:total] / 6 %>) = <%= @my_searches[:chargable] %>
-          </p>
+          <div>Total Cases - <%= @my_kases[:all] %> </div>
+          <div>Successful Cases - <%= @my_kases[:successful] %> </div><br/>
+          <p> Chargable Cases = Successful Cases </p>
         </div>
-        <p>Chargable Searches - <%= @my_searches[:chargable] %> </p>
+        <p>Chargable Cases - <%= @my_kases[:chargable] %> </p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

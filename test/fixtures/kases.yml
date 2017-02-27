@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  'no': MyString
+  name: MyString
+  from_year: 1
+  to_year: 1
+
+two:
+  'no': MyString
+  name: MyString
+  from_year: 1
+  to_year: 1

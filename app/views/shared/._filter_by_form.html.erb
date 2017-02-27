@@ -1,5 +1,12 @@
 <div class="row">
   <%= form_tag("", :method=>:get) do%>
+    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+    <select name="court" class="form-control">
+      <option value="ecourt">Ecourt</option>
+      <option value="supreme_court" <%= (params[:court] == "supreme_court") ? "selected" : "" %>>Supreme Court</option>
+      <option value="bombay_high_court" <%= (params[:court] == "bombay_high_court") ? "selected" : "" %>>Bombay High Court</option>
+    </select>
+  </div>
 
   <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
     <h3><i class="fa fa-filter"></i> Filter By </h3>

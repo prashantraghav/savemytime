@@ -1,8 +1,11 @@
 class SupremeCourt::CaseTitleController < ApplicationController
 
-  before_action :active_page
+  before_action :active_page, :set_kase
 
   def index
+    @kase = Kase.find_by_no(params[:case_no])
+    @page_desc = "parsing"
+    redirect_to supreme_court_case_title_search_results_path(@kase.supreme_court_case_title_search.id) if @kase.supreme_court_case_title_search.present?
   end
 
   def search
@@ -13,6 +16,7 @@ class SupremeCourt::CaseTitleController < ApplicationController
 
   def result
     @search = SupremeCourt::CaseTitle::Search.unscoped.find params[:id]
+    @page_desc = "Result"
   end
 
   def details
@@ -24,7 +28,7 @@ class SupremeCourt::CaseTitleController < ApplicationController
   private
 
   def perform_search
-    search = current_user.supreme_court_case_title_searches.create(:params=>params)
+    search = current_user.supreme_court_case_title_searches.create(:params=>params, :kase_id=>@kase.id)
     Delayed::Job.enqueue SearchJob.new(SupremeCourt::CaseTitle::Search, search.id)
   end
 
@@ -32,8 +36,10 @@ class SupremeCourt::CaseTitleController < ApplicationController
     @active_link = supreme_court_case_title_index_path
     @page_icon = "fa fa-university"
     @page_heading = "Supreme Court"
-    @page_desc = "parsing"
   end
 
+  def set_kase
+    @kase = Kase.find_by_no(params[:case_no]) if params[:case_no]
+  end
 
 end

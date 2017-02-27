@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>No:</strong>
+  <%= @kase.no %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @kase.name %>
+</p>
+
+<p>
+  <strong>From year:</strong>
+  <%= @kase.from_year %>
+</p>
+
+<p>
+  <strong>To year:</strong>
+  <%= @kase.to_year %>
+</p>
+
+<%= link_to 'Edit', edit_kase_path(@kase) %> |
+<%= link_to 'Back', kases_path %>

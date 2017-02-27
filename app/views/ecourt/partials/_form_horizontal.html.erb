@@ -32,15 +32,15 @@
   <div class="form-group">
     <label class="control-label col-sm-1">Name:</label>
     <div class="col-sm-3">
-      <input id="name" name="name" type="text" class="form-control" required="requried"/>
+      <input id="name" name="name" type="text" class="form-control" required="requried" value='<%= @kase.name %>'/>
     </div>
     <label class="control-label col-sm-1">Year:</label>
     <div class="col-sm-3">
-      <input id="from_year" type="text" name="from_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!"> 
+      <input id="from_year" type="text" name="from_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!" value="<%= @kase.from_year %>"> 
     </div>
     <label class="col-sm-1"> <center>To</center> </label>
     <div class="col-sm-3">
-      <input id="to_year" type="text" name="to_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!"> 
+      <input id="to_year" type="text" name="to_year" class="form-control" pattern="[0-9]{4}" required="required" title="Invalid Year!" value="<%= @kase.to_year %>"> 
     </div>
   </div>
 
