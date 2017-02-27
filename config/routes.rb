@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :cases, :to=>'kases', :as=>'kases'
 
-  root :to=>'cases#index'
+  root :to=>'kases#index'
 
   namespace :control_panel do
     get 'stats/index'
