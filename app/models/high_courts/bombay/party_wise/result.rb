@@ -2,7 +2,7 @@ class HighCourts::Bombay::PartyWise::Result < ActiveRecord::Base
 
   belongs_to :search, :class_name=>'HighCourts::Bombay::PartyWise::Search', :foreign_key => "high_courts_bombay_party_wise_search_id" 
 
-  has_many :details, :class_name=>'HighCourts::Bombay::PartyWise::Detail', :foreign_key => "high_courts_bombay_party_wise_result_id" 
+  has_many :details, :class_name=>'HighCourts::Bombay::PartyWise::Detail', :foreign_key => "high_courts_bombay_party_wise_result_id", :dependent => :destroy
 
   scope :successful_response, ->{where(:response_code=>200)}
 

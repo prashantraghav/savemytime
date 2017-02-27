@@ -1,6 +1,6 @@
 class HighCourts::Bombay::PartyWise::Search < ActiveRecord::Base
 
-  has_many :results, :class_name=>'HighCourts::Bombay::PartyWise::Result', :foreign_key => "high_courts_bombay_party_wise_search_id"
+  has_many :results, :class_name=>'HighCourts::Bombay::PartyWise::Result', :foreign_key => "high_courts_bombay_party_wise_search_id", :dependent => :destroy
 
   belongs_to :user
   belongs_to :kase

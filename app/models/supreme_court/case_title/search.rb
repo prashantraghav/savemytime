@@ -1,6 +1,6 @@
 class SupremeCourt::CaseTitle::Search < ActiveRecord::Base
 
-  has_many :results, :class_name=>'SupremeCourt::CaseTitle::Result', :foreign_key => "supreme_court_case_title_search_id"
+  has_many :results, :class_name=>'SupremeCourt::CaseTitle::Result', :foreign_key => "supreme_court_case_title_search_id", :dependent => :destroy
 
   belongs_to :user
   belongs_to :kase
