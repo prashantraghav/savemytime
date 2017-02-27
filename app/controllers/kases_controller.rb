@@ -49,7 +49,7 @@ class KasesController < ApplicationController
   def update
     respond_to do |format|
       if @kase.update(kase_params)
-        format.html { redirect_to @kase, notice: 'Kase was successfully updated.' }
+        format.html { redirect_to kases_path, notice: 'Kase was successfully updated.' }
         format.json { render :show, status: :ok, location: @kase }
       else
         format.html { render :edit }
