@@ -4,6 +4,11 @@ class SupremeCourt::CaseTitle::Search < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :kase
+  
+  def kase
+    Kase.unscoped.find kase_id
+  end
+  
 
   serialize :params
 
