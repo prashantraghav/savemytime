@@ -3,7 +3,6 @@ class SupremeCourt::CaseTitleController < ApplicationController
   before_action :active_page, :set_kase
 
   def index
-    @kase = Kase.find_by_no(params[:case_no])
     @page_desc = "parsing"
     redirect_to supreme_court_case_title_search_results_path(@kase.supreme_court_case_title_search.id) if @kase.supreme_court_case_title_search.present?
   end
@@ -39,7 +38,7 @@ class SupremeCourt::CaseTitleController < ApplicationController
   end
 
   def set_kase
-    @kase = Kase.find_by_no(params[:case_no]) if params[:case_no]
+    @kase = Kase.unscoped.find_by_no(params[:case_no]) if params[:case_no]
   end
 
 end
