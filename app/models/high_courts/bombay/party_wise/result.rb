@@ -15,7 +15,7 @@ class HighCourts::Bombay::PartyWise::Result < ActiveRecord::Base
     set_response_object
     resp  = get_response
     self.response_code = resp.try(:code)
-    self.response_body = resp.try(:body)
+    self.response_body = resp.try(:body).to_s.encode("utf-8", :invalid => :replace, :undef => :replace)
     self.save!
     get_details
     return self
