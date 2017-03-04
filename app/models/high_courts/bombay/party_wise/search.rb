@@ -73,21 +73,6 @@ class HighCourts::Bombay::PartyWise::Search < ActiveRecord::Base
     end
     res
   end
-=begin
-  def formatted_results
-    res = {'01'=>{}, '02'=>{}, '03'=>{}}
-    self.class.bench_juri.each do |bench, juri|
-      res[bench]={}
-      juri.split(',').each do |j|
-        res[bench][j]={}
-        (params[:from_year].to_i..params[:to_year].to_i).each do |year|
-          res[bench][j][year] = results.where(:bench=>bench).where(:jurisdiction=>j).where(:year=>year)
-        end
-      end
-    end
-    res
-  end
-=end
 
   private
 
