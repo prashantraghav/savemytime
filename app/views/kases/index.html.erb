@@ -29,7 +29,7 @@
           <td><%= kase.no %></td>
           <td><%= link_to kase.name, edit_kase_path(kase) %></td>
           <td><%= kase.from_year.to_s+'-'+kase.to_year.to_s %></td>
-          <td>Not Available <%#= ecourt_link(kase)%></td>
+          <td><%= ecourt_link(kase)%></td>
           <td><%= supreme_court_link(kase) %></td>
           <td><%= bombay_high_court_link(kase) %></td>
         </tr>

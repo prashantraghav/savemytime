@@ -40,7 +40,7 @@ class EcourtResponse
     Rails.logger.info "Setting Ecourt URLs - #{Time.now}" unless Rails.env.production?
 
     @uri = URI('http://services.ecourts.gov.in')
-    @get_url = "/ecourtindia/cases/ki_petres.php?state_cd=#{@state_code}&dist_cd=#{@dist_code}&appFlag=web"
+    @get_url = "/ecourtindia/cases/ki_petres.php?state=D&state_cd=#{@state_code}&dist_cd=#{@dist_code}"
     @captcha_url = "/ecourtindia/cases/image_captcha.php"
     @post_url = "/ecourtindia/cases/ki_petres_qry.php"
     @post_details_url = "/ecourtindia/cases/o_civil_case_history.php"

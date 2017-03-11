@@ -101,6 +101,6 @@ class EcourtController < ApplicationController
   end
 
   def set_kase
-    @kase = Kase.find_by_no(params[:case_no]) if params[:case_no]
+    @kase = Kase.unscoped.find_by_no(params[:case_no]) if params[:case_no]
   end
 end
