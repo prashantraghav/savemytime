@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
 
-  resources :cases, :to=>'kases', :as=>'kases'
+  resources :cases, :controller=>'kases', :as=>'kases'
 
   root :to=>'kases#index'
 

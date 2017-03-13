@@ -38,7 +38,7 @@ class Ecourts::Search < ActiveRecord::Base
   end
 
   def successful?
-    (court_complexes.successful_response.present? || court_establishment.successful_response.present?) ? true : false
+    (court_complexes.successful_response.present? || court_establishments.successful_response.present?) ? true : false
   end
 
   def unsuccessful?
