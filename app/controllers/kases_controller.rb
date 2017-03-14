@@ -9,7 +9,7 @@ class KasesController < ApplicationController
   def index
     filter_by
     @kase = (current_user.id == 1) ? Kase.unscoped.send(@filter_by.to_sym, *@filter_params)
-                                   : current_user.kase.send(@filter_by.to_sym, *@filter_params)
+                                   : current_user.kases.send(@filter_by.to_sym, *@filter_params)
 
     @kases = @kase.order(:id=>:desc)
   end
