@@ -19,7 +19,7 @@ class SupremeCourt::CaseNumber < ActiveRecord::Base
   def get_response
     tries ||= 3
     resp = nil
-    court_params = {:case_type=>case_type, :case_number=>case_number,:year=>year, :year=>year}
+    court_params = {:case_type=>case_type, :case_number=>case_number,:year=>year}
 
     begin
       resp  = SupremeCourtResponse::CaseNumber.new(court_params).search
