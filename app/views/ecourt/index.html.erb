@@ -103,11 +103,11 @@ $("form").submit(function(){
               name: $('#name').val(),
               case_no: '<%= @kase.no %>'
             },
-      success: function(result){
+      success: function(search_id){
         /*$("#result").html(result)
         $("#process").hide();
         refresh_spin_stop(); */
-        window.location.href = '<%= ecourt_path(:case_no=>@kase.no)%>'
+        window.location.href = '<%= ecourt_path(:case_no=>@kase.no)%>&search_id='+search_id
       }
     });
     return false;

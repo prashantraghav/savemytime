@@ -1,5 +1,5 @@
 class Kase < ActiveRecord::Base
-  has_one :ecourts_search, :class_name=>'Ecourts::Search', :dependent => :destroy
+  has_many :ecourts_searches, :class_name=>'Ecourts::Search', :dependent => :destroy
   has_one :supreme_court_case_title_search, :class_name=>'SupremeCourt::CaseTitle::Search', :dependent => :destroy
   has_one :high_courts_bombay_party_wise_search, :class_name=>'HighCourts::Bombay::PartyWise::Search', :dependent => :destroy
 

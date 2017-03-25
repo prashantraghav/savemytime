@@ -3,7 +3,7 @@ class EcourtController < ApplicationController
 
   def index
     @results = Hash.new
-    redirect_to ecourt_search_results_path(@kase.ecourts_search.id) if @kase.ecourts_search.present?
+    redirect_to ecourt_search_results_path(@kase.ecourts_searches.find params[:search_id]) if  params[:search_id]
   end
 
   def districts
@@ -19,9 +19,9 @@ class EcourtController < ApplicationController
   def search
     @court_name = params['court_name']
     @state_code, @dist_code = params['state_code'], params['dist_code']
-    perform_search if request.post?
+    search = perform_search if request.post?
     @searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
-    render :layout=>false
+    render :json=>search.id
   end
 
 
@@ -91,6 +91,7 @@ class EcourtController < ApplicationController
     courts = get_courts
     search = current_user.ecourts_searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params, :kase_id=>@kase.id)
     Delayed::Job.enqueue SearchJob.new(Ecourts::Search, search.id)
+    search
   end
 
   def active_page

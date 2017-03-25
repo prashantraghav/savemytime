@@ -1,11 +1,13 @@
 module KasesHelper
-  def ecourt_link(kase)
-    text, path = "Search", ecourt_path(:case_no=>kase.no)
-    if kase.ecourts_search.present?
-      text = kase.ecourts_search.status.eql?("completed") ? 'View Result' : kase.ecourts_search.status
-      path = kase.ecourts_search.status.eql?("completed") ? ecourt_search_results_path(kase.ecourts_search) : nil
+  def ecourt_link(kase, search=nil)
+    text, path, title = "Search", ecourt_path(:case_no=>kase.no), ''
+    if search.present?
+      state = ECOURT_CONFIG_DATA['states'].detect{|s| s['code'] == search.params['state_code'].to_i}
+      title = "#{state['name']}, #{state['dist'].detect{|d| d['code'] == search.params['dist_code'].to_i}['name']}"
+      text = search.status.eql?("completed") ? 'View Result' : search.status
+      path = search.status.eql?("completed") ? ecourt_search_results_path(search) : 'javascript:void(0)'
     end
-    (path.present?) ? link_to(text, path, {:target=>'_blank'}) : text
+    (path.present?) ? link_to(text, path, {:target=>'_blank', :title=>title}) : text
   end
 
   def supreme_court_link(kase)
