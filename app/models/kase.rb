@@ -20,6 +20,6 @@ class Kase < ActiveRecord::Base
   scope :between_date, ->(from_date, to_date){where("DATE(created_at) between DATE(?) and DATE(?)",  from_date, to_date)}
 
   def successful?
-    (ecourts_searches.detect{|s| s.try(:successful?) }|| supreme_court_case_title_search.try(:successful?) || high_courts_bombay_party_wise_search.try(:successful?)) ? true : false
+    (ecourts_searches.detect{|s| s.try(:successful?)}.present?|| supreme_court_case_title_search.try(:successful?) || high_courts_bombay_party_wise_search.try(:successful?)) ? true : false
   end
 end
