@@ -21,7 +21,14 @@ class SupremeCourt::CaseTitleController < ApplicationController
   def details
     search = SupremeCourt::CaseTitle::Search.unscoped.find params[:id]
     @details = search.results.find(params[:result_id]).get_details(params['listcause'])
-    render :layout=>false
+    respond_to do |format|
+      format.html do
+        render :layout=>'pdf'
+      end
+      format.pdf do
+        render :pdf=>"Supreme Court #{search.params['title']}-#{search.params['from_year']}-#{search.params['to_year']}"
+      end
+    end
   end
 
   private

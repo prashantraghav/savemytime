@@ -67,7 +67,16 @@ class EcourtController < ApplicationController
      e = Ecourts::Result.new(court_params)
      @details = e.get_details(params['caseno'].match(/[0-9]*$/).to_s, params['cino'])
 
-     render :layout=>false
+    respond_to do |format|
+      format.html do
+        render :layout=>'pdf'
+      end
+      format.pdf do
+        render :pdf=>"Ecourt #{@kase.name}-#{@kase.from_year}-#{@kase.to_year}"
+      end
+    end
+
+     #render :layout=>false
   end
 
 

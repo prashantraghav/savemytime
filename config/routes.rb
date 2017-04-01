@@ -36,7 +36,7 @@ Rails.application.routes.draw do
       match 'party_wise/search', :as=>'party_wise_search', :via=>[:get, :post]
       match 'party_wise/search/:id', :as=>'party_wise_search_results', :via=>:get, :to=>"party_wise#results"
       match 'party_wise/search/:id/result/:result_id/', :as=>'party_wise_search_result', :via=>:get, :to=>"party_wise#result"
-      match 'party_wise/search/:id/result/:result_id/details/:details_id', :as=>'party_wise_search_result_details', :via=>:get, :to=>"party_wise#details"
+      match 'party_wise/search/:id/result/:result_id/details(.:format)/:details_id', :as=>'party_wise_search_result_details', :via=>:get, :to=>"party_wise#details"
     end
   end
 

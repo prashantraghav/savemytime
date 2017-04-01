@@ -27,7 +27,16 @@ class HighCourts::Bombay::PartyWiseController < ApplicationController
     search = HighCourts::Bombay::PartyWise::Search.unscoped.find params[:id]
     @details = search.results.find(params[:result_id]).details.find(params[:details_id])
     @page_desc = "Case Details"
-    render :layout=>false
+
+    respond_to do |format|
+      format.html do
+        render :layout=>'pdf'
+      end
+      format.pdf do
+        render :pdf=>"Mumbai High Court #{search.params['title']}-#{search.params['from_year']}-#{search.params['to_year']}"
+      end
+    end
+    #render :layout=>false
   end
 
   private

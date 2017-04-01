@@ -6,6 +6,10 @@ class Ecourts::Search < ActiveRecord::Base
   belongs_to :user
   belongs_to :kase
 
+  def kase
+    Kase.unscoped{ super }
+  end
+
   serialize :params
 
   before_create :set_status

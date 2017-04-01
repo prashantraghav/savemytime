@@ -1,0 +1,31 @@
+<html>
+<head>
+<style>
+  div.download_pdf{
+    background-color: #222222;
+    padding: 10px 10px 10px 46%;
+    position: relative;
+    top: -10px;
+    width: 110%;
+    left: -10px;
+    font-size: x-large;
+   }
+
+
+   div.download_pdf  a{
+     color: #FFFFFF;
+     display: block;
+   }
+
+  </style>
+</head>
+<body>
+<div class="download_pdf">
+  <a href="<%= request.original_url.gsub!('details', 'details.pdf') %>", target="_blank" class="navbar-brand">Download Pdf</a>
+</div>
+<div class="row">
+  <%= yield %>
+</div>
+</body>
+</html>
+

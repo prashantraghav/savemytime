@@ -1,0 +1,1 @@
+<%= raw @details.gsub(/<script.*?src=".*?"><\/script>/, ' ').to_s.gsub(/<link rel="stylesheet" href="\.\.\/css\/history.css" type="text\/css">/, ' ').to_s %>
