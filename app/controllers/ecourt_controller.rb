@@ -23,7 +23,16 @@ class EcourtController < ApplicationController
     @searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
     render :json=>search.id
   end
-
+  
+  def test
+   ecourt =  Ecourts::CourtComplex.last
+   court_params = {:state_code=>ecourt.state_code, :dist_code=>ecourt.dist_code,:name=>ecourt.name, :year=>ecourt.year, :court_code_arr=>ecourt.court_code}
+   resp  = EcourtResponse.new(court_params)
+   resp.set_url
+   resp.get_request
+   @captcha = resp.parse_captcha.body
+   
+  end
 
   def result
     @search = Ecourts::Search.unscoped.find params[:id]

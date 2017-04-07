@@ -34,14 +34,14 @@ class EcourtResponse
     resp
   end
 
-  private
+  #private
 
   def set_url
     Rails.logger.info "Setting Ecourt URLs - #{Time.now}" unless Rails.env.production?
 
     @uri = URI('http://services.ecourts.gov.in')
     @get_url = "/ecourtindia/cases/ki_petres.php?state=D&state_cd=#{@state_code}&dist_cd=#{@dist_code}"
-    @captcha_url = "/ecourtindia/cases/image_captcha.php"
+    @captcha_url = "/ecourtindia/cases/secureimage_show.php"
     @post_url = "/ecourtindia/cases/ki_petres_qry.php"
     @post_details_url = "/ecourtindia/cases/o_civil_case_history.php"
   end
@@ -61,6 +61,7 @@ class EcourtResponse
     req = Net::HTTP::Get.new(@captcha_url)
     req.add_field('cookie', @cookie)
     resp = @http.request req
+=begin
     File.open(local_captcha_path, 'wb'){|f| f.write(resp.body)}
     
     e = Tesseract::Engine.new {|e|
@@ -69,6 +70,7 @@ class EcourtResponse
     }
 
     @captcha = e.text_for(local_captcha_path).strip
+=end
   end
 
 
