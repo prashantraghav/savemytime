@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   match 'ecourt/search/:id', :as=>'ecourt_search_results', :via=>:get, :to=>"ecourt#result"
   get 'ecourt/details', :as=>'ecourt_details'
   get 'ecourt/test', :as=>'ecourt_test'
+  get 'ecourt/post_test', :as=>'ecourt_post_test'
 
   namespace :control_panel do
     get 'authorization', :to=>'authorization#index', :as=>'authorization_index'

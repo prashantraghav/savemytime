@@ -1,11 +1,38 @@
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <%= @captcha %>
-    <%= #render 'ecourt/partials/form_horizontal' %>
+    <%#= form_tag :action=>'post_test' do |f|%>
+      <%#= image_tag @captcha %>
+    <%# end %>
+    
+    <%= render 'ecourt/partials/form_horizontal' %>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div id="obj" class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" >Close</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
+$.noConflict();
+
 $(document).ready(function(){
 
 
@@ -63,7 +90,10 @@ $("form").submit(function(){
   if(court_complex.length < 1 && court_establishment.length < 1){
     $("#no_courts_selected").removeClass('hide');
     return false;
-  }
+    }
+
+
+
 
   $.ajax({
       url: '<%= ecourt_search_path %>',
@@ -84,15 +114,24 @@ $("form").submit(function(){
               name: $('#name').val(),
               case_no: '<%= @kase.no %>'
             },
-      success: function(search_id){
-        /*$("#result").html(result)
-        $("#process").hide();
-        refresh_spin_stop(); */
-        window.location.href = '<%= ecourt_path(:case_no=>@kase.no)%>&search_id='+search_id
+        success: function(result_object){
+
+          console.log(result_object);
+          m = $("#myModal");
+          m.find("#obj").html('<img src="'+result_object['captcha']+'"/> <input type="text" id="cpt"> <button id="btn_c">Submit</button>')
+          $("#myModal").modal({
+            backdrop: 'static',
+            keyboard: false
+          });
       }
     });
     return false;
 });
+
+$('body').on('click', '#btn_c', function(){
+            window.location.href = '<%= ecourt_post_test_path %>?captcha='+$('#cpt').val()
+
+    });
 
 $("#refresh").click(function(){
 $.ajax({

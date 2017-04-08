@@ -41,7 +41,7 @@ class EcourtResponse
 
     @uri = URI('http://services.ecourts.gov.in')
     @get_url = "/ecourtindia/cases/ki_petres.php?state=D&state_cd=#{@state_code}&dist_cd=#{@dist_code}"
-    @captcha_url = "/ecourtindia/cases/secureimage_show.php"
+    @captcha_url = "/ecourtindia/securimage/securimage_show.php"
     @post_url = "/ecourtindia/cases/ki_petres_qry.php"
     @post_details_url = "/ecourtindia/cases/o_civil_case_history.php"
   end
@@ -51,6 +51,7 @@ class EcourtResponse
 
     @http = Net::HTTP.start(@uri.host, @uri.port)
     @get_resp = @http.request_get @get_url
+    @captcha_url = Nokogiri::HTML(@get_resp.body).css('#captcha_image')[0]['src']
     @cookie = @get_resp['set-cookie'].split(';')[0]
   end
 
@@ -58,23 +59,25 @@ class EcourtResponse
     Rails.logger.info "Parsing Captcha - #{Time.now}" unless Rails.env.production?
 
     local_captcha_path = "#{Rails.root}/public/ecourt/captcha.png"
-    req = Net::HTTP::Get.new(@captcha_url)
+    req = Net::HTTP::Get.new(@uri.to_s+@captcha_url)
     req.add_field('cookie', @cookie)
     resp = @http.request req
-=begin
     File.open(local_captcha_path, 'wb'){|f| f.write(resp.body)}
-    
+
     e = Tesseract::Engine.new {|e|
       e.language = :eng
       e.blacklist = '|'
     }
 
     @captcha = e.text_for(local_captcha_path).strip
-=end
+    Rails.logger.info("\n\n\n --- captcha #{@captcha.to_s}\n\n\n")
+
+    '/ecourt/captcha.png'
   end
 
 
-  def post_request
+  def post_request(c)
+    @captcha = c
     Rails.logger.info "Post Request - #{Time.now}" unless Rails.env.production?
 
     req = Net::HTTP::Post.new(@post_url)

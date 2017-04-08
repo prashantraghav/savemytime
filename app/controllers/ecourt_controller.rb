@@ -4,6 +4,7 @@ class EcourtController < ApplicationController
   def index
     @results = Hash.new
     redirect_to ecourt_search_results_path(@kase.ecourts_searches.find params[:search_id]) if  params[:search_id]
+    render :test
   end
 
   def districts
@@ -21,17 +22,26 @@ class EcourtController < ApplicationController
     @state_code, @dist_code = params['state_code'], params['dist_code']
     search = perform_search if request.post?
     @searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
-    render :json=>search.id
+    @result = search.court_complexes.where('updated_at = created_at').first || search.court_establishments.where('updated_at = created_at').first
+    captcha = test
+    render :json=>{result: @result, captcha: captcha}
   end
   
   def test
-   ecourt =  Ecourts::CourtComplex.last
+   ecourt =  @result || Ecourts::Result.find_by_id(params[:id])
    court_params = {:state_code=>ecourt.state_code, :dist_code=>ecourt.dist_code,:name=>ecourt.name, :year=>ecourt.year, :court_code_arr=>ecourt.court_code}
-   resp  = EcourtResponse.new(court_params)
-   resp.set_url
-   resp.get_request
-   @captcha = resp.parse_captcha.body
-   
+   @@resp  = EcourtResponse.new(court_params)
+   @@resp.set_url
+   @@resp.get_request
+   @captcha = @@resp.parse_captcha
+  end
+
+  def post_test
+    begin
+      @resp = @@resp.post_request(params['captcha'])
+    rescue
+      redirect_to ecourt_test_path(:case_no=>'001')
+    end
   end
 
   def result
@@ -108,7 +118,8 @@ class EcourtController < ApplicationController
   def perform_search
     courts = get_courts
     search = current_user.ecourts_searches.create(:state_code=>params[:state_code], :dist_code=>params[:dist_code], :params=>params, :kase_id=>@kase.id)
-    Delayed::Job.enqueue SearchJob.new(Ecourts::Search, search.id)
+    #Delayed::Job.enqueue SearchJob.new(Ecourts::Search, search.id)
+    search.get_result
     search
   end
 

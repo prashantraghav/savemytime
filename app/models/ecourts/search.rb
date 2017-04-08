@@ -60,22 +60,23 @@ class Ecourts::Search < ActiveRecord::Base
 
   def get_result
     processing
-        
+    
+    ecourt_results_ids = Array.new
     params["court_complex"].try(:each) do |i, court|
       params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
         court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = court_complexes.new(court_params).result
+        ecourt_results_ids << court_complexes.create(court_params).id
       end
     end
 
     params["court_establishment"].try(:each) do |i, court|
       params['from_year'].to_i.upto(params['to_year'].to_i).each do |year|
         court_params = {:state_code=>params['state_code'], :dist_code=>params['dist_code'],:name=>params['name'], :year=>year, :court_code=>court["code"]}
-        e = court_establishments.new(court_params).result
+        ecourt_results_ids << court_establishments.create(court_params).id
       end
     end
-
-    completed
+    ecourt_results_ids
+    #completed
   end
 
   private
