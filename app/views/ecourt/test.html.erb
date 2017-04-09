@@ -1,11 +1,6 @@
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <%#= form_tag :action=>'post_test' do |f|%>
-      <%#= image_tag @captcha %>
-    <%# end %>
-    
     <%= render 'ecourt/partials/form_horizontal' %>
-
   </div>
 </div>
 
@@ -31,130 +26,7 @@
 </div>
 
 <script>
-$.noConflict();
-
-$(document).ready(function(){
-
-
-$("body").on('change', '#state_code', function(){
-    $.ajax({
-      url: '<%= ecourt_districts_path %>',
-      beforeSend: function(xhr){
-        $("#dist_code").html('<option value="-1">---</option>')
-      },
-      data: {state_code: $(this).val()},
-      success: function(data){
-        options = '<option value="">Select District</option>';
-        $.each(data, function(i, dist){options +='<option value="'+dist.code+'">'+dist.name+'</option>'})
-        $("#dist_code").html(options)
-      }
-    });
-    });
-
-
-$("body").on('change', "#dist_code", function(){
-    $("input[name='court_type']").removeAttr('checked')
-    $("#court_code").html('<option value="-1">Select Court</option>')
-    $.ajax({
-      	url: '<%= ecourt_courts_path %>',
-      	data: {state_code: $('#state_code').val(), dist_code: $("#dist_code").val()},
-      	success: function(data){
-        	options = '';
-        	$.each(data.complex, function(i, court){
-		   options +='<div class="checkbox">'
-			       +'<label><input type="checkbox" class="court_code_arr" court-name="'+court.name+'"name="court_code_arr[]" value="'+court.code+'"/>'+court.name+'</label>'
-			   +'</div>'
-		 })
-        	$("#court_code_arr").html(options)
-
-        	options = '';
-        	$.each(data.establishment, function(i, court){
-		   options +='<div class="checkbox">'
-				+'<label><input type="checkbox" class="court_code" court-name="'+court.name+'" name="court_code[]" value="'+court.code+'"/>'+court.name+'</label>'
-			     +'</div>'
-		})
-        	$("#court_code").html(options)
-      	}
-    });
-});
-
-
-$("form").submit(function(){
-  $("#no_courts_selected").addClass('hide');
-  court_complex=[];
-  $(".court_code_arr:checked").each(function(){court_complex.push({'code': $(this).val(), 'name': $(this).attr('court-name')})})
-
-  court_establishment = [];
-  $(".court_code:checked").each(function(){court_establishment.push({'code': $(this).val(), 'name' : $(this).attr('court-name')})})
-  
-  if(court_complex.length < 1 && court_establishment.length < 1){
-    $("#no_courts_selected").removeClass('hide');
-    return false;
-    }
-
-
-
-
-  $.ajax({
-      url: '<%= ecourt_search_path %>',
-      type: 'POST',
-      beforeSend: function(xhr){
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        /*$("#process").show();
-        $("#result").html('')
-        refresh_spin_start();*/
-      },
-      data: {
-              state_code: $('#state_code').val(), 
-              dist_code: $("#dist_code").val(), 
-              court_complex: court_complex,
-              court_establishment: court_establishment,
-              from_year: $('#from_year').val(),
-              to_year: $('#to_year').val(),
-              name: $('#name').val(),
-              case_no: '<%= @kase.no %>'
-            },
-        success: function(result_object){
-
-          console.log(result_object);
-          m = $("#myModal");
-          m.find("#obj").html('<img src="'+result_object['captcha']+'"/> <input type="text" id="cpt"> <button id="btn_c">Submit</button>')
-          $("#myModal").modal({
-            backdrop: 'static',
-            keyboard: false
-          });
-      }
-    });
-    return false;
-});
-
-$('body').on('click', '#btn_c', function(){
-            window.location.href = '<%= ecourt_post_test_path %>?captcha='+$('#cpt').val()
-
-    });
-
-$("#refresh").click(function(){
-$.ajax({
-      url: '<%= ecourt_search_path %>',
-      type: 'GET',
-      beforeSend: function(xhr){
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        $("#result").html('')
-        refresh_spin_start();
-      },
-     success: function(result){
-        $("#result").html(result)
-        refresh_spin_stop();
-      }
-    });
-
-    });
-
-var refresh_spin_start = function(){
- $("#refresh").find('i').addClass("fa-spin")
-}
-var refresh_spin_stop = function(){
- $("#refresh").find('i').removeClass("fa-spin")
-}
-})
+function hello(){
+  alert('hello');
+  }
 </script>
