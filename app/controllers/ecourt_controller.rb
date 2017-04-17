@@ -21,31 +21,47 @@ class EcourtController < ApplicationController
     @court_name = params['court_name']
     @state_code, @dist_code = params['state_code'], params['dist_code']
     search = perform_search if request.post?
+    params['ecourt_id'] = search.id
     #@searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
-    captcha = test
-    render :json=>{search: search}
+    captcha = get_captcha
+    #render :json=>{search: search, :captcha=>'ecourt/captcha.png'}
+    render :json=>{:search_id=>params['ecourt_id'], :captcha=>'ecourt/captcha.png', :ecourt_result=>@@ecourt}
+  end
+
+  def get_captcha
+   @ecourt_search = Ecourts::Search.unscoped.find_by_id(params['ecourt_id'])
+   @@ecourt = @ecourt_search.court_complexes.where('updated_at = created_at').first || @ecourt_search.court_establishments.where('updated_at = created_at').first
+
+   if @@ecourt.nil?
+     @ecourt_search.status='completed'
+     @ecourt_search.save
+   else
+     @captcha = @@ecourt.get_request
+   end
   end
   
   def test
-   search = Ecourts::Search.find_by_id(params[:ecourt_id])
-   ecourt = search.court_complexes.where('updated_at = created_at').first || search.court_establishments.where('updated_at = created_at').first
+    get_captcha
+=begin
    court_params = {:state_code=>ecourt.state_code, :dist_code=>ecourt.dist_code,:name=>ecourt.name, :year=>ecourt.year, :court_code_arr=>ecourt.court_code}
    @@resp  = EcourtResponse.new(court_params)
    @@resp.set_url
    @@resp.get_request
    @captcha = @@resp.parse_captcha
+=end
+   render :json=>{:search_id=>params['ecourt_id'], :captcha=>'ecourt/captcha.png?t='+Time.now.to_s(:db), :ecourt_result=>@@ecourt, :status=>@ecourt_search.status}
   end
 
   def post_test
     success = false
     begin
-      @resp = @@resp.post_request(params['captcha'])
+      @resp = @@ecourt.post_captcha_and_save_response(params['captcha'])
       success = true
     rescue
-      test
+      success = false
     end
 
-    render :json=>{:success=>success}
+    render :json=>{:success=>success, :status=>'asd'}
   end
 
   def result

@@ -15,6 +15,21 @@ class Ecourts::Result < ActiveRecord::Base
     (body.match(/#{name}/i)) ? body : "" unless body.nil?
   end
 
+  def get_req_and_parse_captcha(params)
+    court_params = {:state_code=>state_code, :dist_code=>dist_code,:name=>name, :year=>year}.merge(params)
+    @resp  = EcourtResponse.new(court_params)
+    @resp.set_url
+    @resp.get_request
+    @resp.parse_captcha
+  end
+
+  def post_captcha_and_save_response(captcha)
+    response = @resp.post_request(captcha)
+    self.response_code = response.try(:code)
+    self.response_body = response.try(:body)
+    self.save!
+  end
+
   protected
 
   def get_result(params)
@@ -40,4 +55,5 @@ class Ecourts::Result < ActiveRecord::Base
 
     return resp
   end
+
 end

@@ -17,38 +17,86 @@
       <div id="obj" class="modal-body">
         <p>Some text in the modal.</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" >Close</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="progress_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div id="obj" class="modal-body">
+        <progress></progress>
       </div>
     </div>
 
   </div>
 </div>
 
+
+
 <script>
+m = $("#myModal");
+p = $("#progress_modal");
 function parse(ecourt_search_id){
   $.ajax({
     url: '<%= ecourt_test_path %>',
     type: 'GET',
     beforeSend: function(xhr){
-      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      p.find(".modal-title").html('Getting captcha next court');
+      p.modal({ backdrop: 'static', keyboard: false });
     },
     data: {
       ecourt_id: ecourt_search_id
-    },
+      },
+    cache: false,
     success: function(result){
-      m = $("#myModal");
-      m.find("#obj").html('<img src="'+result_object['captcha']+'"/> <input type="text" id="cpt"> <button id="btn_c">Submit</button>')
-      $("#myModal").modal({
-        backdrop: 'static',
-        keyboard: false
-      });
+      if(result['status'] == "completed"){
+        window.location.href='/ecourt/search/'+ecourt_search_id
+
+      }else{
+        m.find("#obj").html('');
+        m.find("#obj").html('<label></label><input type="hidden" id="ecourt_search_id" value="'+ecourt_search_id+'"/>'
+                            +'<img src="'+result['captcha']+'"/>'
+                            +'<input type="text" id="cpt"> <button id="btn_c">Submit</button>')
+        m.modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+        p.modal('hide')
+      }
     }
   });
 }
 
 $('body').on('click', '#btn_c', function(){
-    window.location.href = '<%= ecourt_post_test_path %>?captcha='+$('#cpt').val()
+    $.ajax({
+        url: '<%= ecourt_post_test_path %>',
+        type: 'GET',
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+          p.find(".modal-title").html('Submitting Captcha')
+          p.modal({ backdrop: 'static', keyboard: false });
+          m.modal('hide');
+          m.find("#obj").find('img').remove();
+
+        },
+        data: {
+          captcha: $('#cpt').val(),
+          ecourt_id: $('#ecourt_search_id').val()
+        },
+        success: function(result){
+          parse($('#ecourt_search_id').val())
+        }
+      });
 });
 
 </script>
