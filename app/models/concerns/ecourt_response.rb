@@ -70,7 +70,6 @@ class EcourtResponse
     }
 
     @captcha = e.text_for(local_captcha_path).strip
-    Rails.logger.info("\n\n\n --- captcha #{@captcha.to_s}\n\n\n")
 
     '/ecourt/captcha.png'
   end
@@ -87,7 +86,7 @@ class EcourtResponse
 
     Rails.logger.info "Post Response Code - #{resp.code} - #{Time.now}" unless Rails.env.production?
 
-    raise ResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 and resp.body.match(/#{@name}/i)
+    raise ResponseError.new("Failed Response", resp) unless resp.code.to_i == 200 #and resp.body.match(/#{@name}/i)
     resp
   end
 
