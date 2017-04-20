@@ -1,104 +1,56 @@
-<div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <%= render 'ecourt/partials/form_horizontal' %>
-  </div>
-</div>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div id="obj" class="modal-body">
-        <p>Some text in the modal.</p>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Modal -->
-<div id="progress_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div id="obj" class="modal-body">
+<% if @ecourt_search.status.eql?("completed") %>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="alert alert-warning">
+        <div>Please wait while we are organizing results.</div>
         <progress></progress>
       </div>
     </div>
-
+  </div>
+  <script> 
+$(document).ready(function(){
+      window.location.href="<%= ecourt_search_results_path(@ecourt_search.id) %>"
+        });
+  </script>
+<% else %>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <%= form_tag ecourt_post_test_path, :class=>'form-horizontal' do %>
+      <input type="hidden" name="ecourt_id" value="<%= @ecourt_search.id%>"/>
+      <div class="form-group">
+        <span><b>Court Type:</b> <%= @ecourt.class.to_s.gsub('Ecourts::', '') %></span>
+        <span><b>Court Code:</b> <%= @ecourt.court_code %></span>
+        <span><b>Year:</b> <%= @ecourt.year %></span>
+      </div>
+      <div class="form-group">
+        <img src="<%= @captcha %>"/>
+      </div>
+      <div class="form-group">
+        <input type="text" name="captcha" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <input type="submit" class="form-control" value="submit" data-toggle="modal" data-target="#myModal">
+      </div>
+  <% end %>
   </div>
 </div>
 
 
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
 
-<script>
-m = $("#myModal");
-p = $("#progress_modal");
-function parse(ecourt_search_id){
-  $.ajax({
-    url: '<%= ecourt_test_path %>',
-    type: 'GET',
-    beforeSend: function(xhr){
-      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      p.find(".modal-title").html('Getting captcha for next court');
-      p.modal({ backdrop: 'static', keyboard: false });
-    },
-    data: {
-      ecourt_id: ecourt_search_id
-      },
-    cache: false,
-    success: function(result){
-      if(result['status'] == "completed"){
-        p.find(".modal-title").html('Redirecting to results');
-        window.location.href='/ecourt/search/'+ecourt_search_id
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">Submitting Captcha</h4>
+      </div>
+      <div id="obj" class="modal-body">
+       <progress></progress>
+      </div>
+    </div>
 
-      }else{
-        m.find("#obj").html('');
-        m.find("#obj").html('<label></label><input type="hidden" id="ecourt_search_id" value="'+ecourt_search_id+'"/>'
-                            +'<img src="'+result['captcha']+'"/>'
-                            +'<input type="text" id="cpt"> <button id="btn_c">Submit</button>')
-        m.find("#obj").html(captcha_modal(result['search_id'], result['captcha'], result['ecourt_result']));
-        m.modal({
-            backdrop: 'static',
-            keyboard: false
-          });
-        p.modal('hide')
-      }
-    }
-  });
-}
-
-$('body').on('click', '#btn_c', function(){
-    $.ajax({
-        url: '<%= ecourt_post_test_path %>',
-        type: 'GET',
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-          p.find(".modal-title").html('Submitting Captcha')
-          p.modal({ backdrop: 'static', keyboard: false });
-          m.modal('hide');
-          m.find("#obj").find('img').remove();
-
-        },
-        data: {
-          captcha: $('#cpt').val(),
-          ecourt_id: $('#ecourt_search_id').val()
-        },
-        success: function(result){
-          parse($('#ecourt_search_id').val())
-        }
-      });
-});
-
-</script>
+  </div>
+</div>
+<% end %>

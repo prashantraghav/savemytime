@@ -1,10 +1,9 @@
 class EcourtController < ApplicationController
-  before_action :get_states, :active_page, :set_kase
+  before_action :get_states, :active_page, :set_kase, :except=>[:post_test]
 
   def index
     @results = Hash.new
     redirect_to ecourt_search_results_path(@kase.ecourts_searches.find params[:search_id]) if  params[:search_id]
-    render :test
   end
 
   def districts
@@ -21,27 +20,31 @@ class EcourtController < ApplicationController
     @court_name = params['court_name']
     @state_code, @dist_code = params['state_code'], params['dist_code']
     search = perform_search if request.post?
+=begin
     params['ecourt_id'] = search.id
     #@searches = (current_user.id == 1 ) ? Ecourts::Search.unscoped.today.order(:id=>:desc) : Ecourts::Search.today.order(:id=>:desc)
     captcha = get_captcha
     #render :json=>{search: search, :captcha=>'ecourt/captcha.png'}
-    render :json=>{:search_id=>params['ecourt_id'], :captcha=>'ecourt/captcha.png', :ecourt_result=>@@ecourt}
+=end
+    render :json=>{:search_id=>search.id}
   end
 
   def get_captcha
    @ecourt_search = Ecourts::Search.unscoped.find_by_id(params['ecourt_id'])
-   @@ecourt = @ecourt_search.court_complexes.where('updated_at = created_at').first || @ecourt_search.court_establishments.where('updated_at = created_at').first
+   @@ecourt = @ecourt = @ecourt_search.court_complexes.where('updated_at = created_at').first || @ecourt_search.court_establishments.where('updated_at = created_at').first
 
    if @@ecourt.nil?
      @ecourt_search.status='completed'
      @ecourt_search.save
+     #redirect_to ecourt_search_results_path(@ecourt_search.id)
    else
-     @captcha = @@ecourt.get_request
+     @@ecourt.get_request
    end
   end
   
   def test
     get_captcha
+    @captcha = '/ecourt/captcha.png?t='+Time.now.to_s(:db)
 =begin
    court_params = {:state_code=>ecourt.state_code, :dist_code=>ecourt.dist_code,:name=>ecourt.name, :year=>ecourt.year, :court_code_arr=>ecourt.court_code}
    @@resp  = EcourtResponse.new(court_params)
@@ -49,7 +52,7 @@ class EcourtController < ApplicationController
    @@resp.get_request
    @captcha = @@resp.parse_captcha
 =end
-   render :json=>{:search_id=>params['ecourt_id'], :captcha=>'ecourt/captcha.png?t='+Time.now.to_s(:db), :ecourt_result=>@@ecourt, :status=>@ecourt_search.status}
+   #render :json=>{:search_id=>params['ecourt_id'], :captcha=>'ecourt/captcha.png?t='+Time.now.to_s(:db), :ecourt_result=>@@ecourt, :status=>@ecourt_search.status}
   end
 
   def post_test
@@ -60,8 +63,8 @@ class EcourtController < ApplicationController
     rescue
       success = false
     end
-
-    render :json=>{:success=>success, :status=>'asd'}
+    redirect_to ecourt_test_path(:ecourt_id=>params['ecourt_id']);
+    #render :json=>{:success=>success, :status=>'asd'}
   end
 
   def result

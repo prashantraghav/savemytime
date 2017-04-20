@@ -3,138 +3,102 @@
     <%= render 'ecourt/partials/form_horizontal' %>
   </div>
 </div>
-<!-- 
-<div class="row" id="process" style="display:none">
-  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <center>Searching...</center>
-  </div>
-  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <center><progress></progress></center>
-  </div>
-</div>
 
-<br/>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
 
-<div class="row">
-  <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
-    <div><h4><span>Today's Searches</span><span style="margin-left:1%"><a href="javascript:void(-1);" id="refresh"><i class="fa fa-refresh"></i></a></span></h4><hr/></div>
-    <div id="result" class="pre-scrollable" style="height:300px">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div id="obj" class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
     </div>
+
   </div>
 </div>
--->
+
+<!-- Modal -->
+<div id="progress_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div id="obj" class="modal-body">
+        <progress></progress>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 
 <script>
-$(document).ready(function(){
-
-
-$("body").on('change', '#state_code', function(){
-    $.ajax({
-      url: '<%= ecourt_districts_path %>',
-      beforeSend: function(xhr){
-        $("#dist_code").html('<option value="-1">---</option>')
-      },
-      data: {state_code: $(this).val()},
-      success: function(data){
-        options = '<option value="">Select District</option>';
-        $.each(data, function(i, dist){options +='<option value="'+dist.code+'">'+dist.name+'</option>'})
-        $("#dist_code").html(options)
-      }
-    });
-    });
-
-
-$("body").on('change', "#dist_code", function(){
-    $("input[name='court_type']").removeAttr('checked')
-    $("#court_code").html('<option value="-1">Select Court</option>')
-    $.ajax({
-      	url: '<%= ecourt_courts_path %>',
-      	data: {state_code: $('#state_code').val(), dist_code: $("#dist_code").val()},
-      	success: function(data){
-        	options = '';
-        	$.each(data.complex, function(i, court){
-		   options +='<div class="checkbox">'
-			       +'<label><input type="checkbox" class="court_code_arr" court-name="'+court.name+'"name="court_code_arr[]" value="'+court.code+'"/>'+court.name+'</label>'
-			   +'</div>'
-		 })
-        	$("#court_code_arr").html(options)
-
-        	options = '';
-        	$.each(data.establishment, function(i, court){
-		   options +='<div class="checkbox">'
-				+'<label><input type="checkbox" class="court_code" court-name="'+court.name+'" name="court_code[]" value="'+court.code+'"/>'+court.name+'</label>'
-			     +'</div>'
-		})
-        	$("#court_code").html(options)
-      	}
-    });
-});
-
-
-$("form").submit(function(){
-  $("#no_courts_selected").addClass('hide');
-  court_complex=[];
-  $(".court_code_arr:checked").each(function(){court_complex.push({'code': $(this).val(), 'name': $(this).attr('court-name')})})
-
-  court_establishment = [];
-  $(".court_code:checked").each(function(){court_establishment.push({'code': $(this).val(), 'name' : $(this).attr('court-name')})})
-  
-  if(court_complex.length < 1 && court_establishment.length < 1){
-    $("#no_courts_selected").removeClass('hide');
-    return false;
-  }
-
+m = $("#myModal");
+p = $("#progress_modal");
+function parse(ecourt_search_id){
   $.ajax({
-      url: '<%= ecourt_search_path %>',
-      type: 'POST',
-      beforeSend: function(xhr){
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        /*$("#process").show();
-        $("#result").html('')
-        refresh_spin_start();*/
+    url: '<%= ecourt_test_path %>',
+    type: 'GET',
+    beforeSend: function(xhr){
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      p.find(".modal-title").html('Getting captcha for next court');
+      p.modal({ backdrop: 'static', keyboard: false });
+    },
+    data: {
+      ecourt_id: ecourt_search_id
       },
-      data: {
-              state_code: $('#state_code').val(), 
-              dist_code: $("#dist_code").val(), 
-              court_complex: court_complex,
-              court_establishment: court_establishment,
-              from_year: $('#from_year').val(),
-              to_year: $('#to_year').val(),
-              name: $('#name').val(),
-              case_no: '<%= @kase.no %>'
-            },
-      success: function(search_id){
-        /*$("#result").html(result)
-        $("#process").hide();
-        refresh_spin_stop(); */
-        window.location.href = '<%= ecourt_path(:case_no=>@kase.no)%>&search_id='+search_id
+    cache: false,
+    success: function(result){
+      if(result['status'] == "completed"){
+        p.find(".modal-title").html('Redirecting to results');
+        window.location.href='/ecourt/search/'+ecourt_search_id
+
+      }else{
+        m.find("#obj").html('');
+        m.find("#obj").html('<label></label><input type="hidden" id="ecourt_search_id" value="'+ecourt_search_id+'"/>'
+                            +'<img src="'+result['captcha']+'"/>'
+                            +'<input type="text" id="cpt"> <button id="btn_c">Submit</button>')
+        m.find("#obj").html(captcha_modal(result['search_id'], result['captcha'], result['ecourt_result']));
+        m.modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+        p.modal('hide')
       }
-    });
-    return false;
+    }
+  });
+}
+
+$('body').on('click', '#btn_c', function(){
+    $.ajax({
+        url: '<%= ecourt_post_test_path %>',
+        type: 'GET',
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+          p.find(".modal-title").html('Submitting Captcha')
+          p.modal({ backdrop: 'static', keyboard: false });
+          m.modal('hide');
+          m.find("#obj").find('img').remove();
+
+        },
+        data: {
+          captcha: $('#cpt').val(),
+          ecourt_id: $('#ecourt_search_id').val()
+        },
+        success: function(result){
+          parse($('#ecourt_search_id').val())
+        }
+      });
 });
 
-$("#refresh").click(function(){
-$.ajax({
-      url: '<%= ecourt_search_path %>',
-      type: 'GET',
-      beforeSend: function(xhr){
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        $("#result").html('')
-        refresh_spin_start();
-      },
-     success: function(result){
-        $("#result").html(result)
-        refresh_spin_stop();
-      }
-    });
-
-    });
-
-var refresh_spin_start = function(){
- $("#refresh").find('i').addClass("fa-spin")
-}
-var refresh_spin_stop = function(){
- $("#refresh").find('i').removeClass("fa-spin")
-}
-})
 </script>
