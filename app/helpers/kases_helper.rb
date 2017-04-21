@@ -5,7 +5,7 @@ module KasesHelper
       state = ECOURT_CONFIG_DATA['states'].detect{|s| s['code'] == search.params['state_code'].to_i}
       title = "#{state['name']}, #{state['dist'].detect{|d| d['code'] == search.params['dist_code'].to_i}['name']}"
       text = search.status.eql?("completed") ? 'View Result' : search.status
-      path = search.status.eql?("completed") ? ecourt_search_results_path(search) : 'javascript:void(0)'
+      path = search.status.eql?("completed") ? ecourt_search_results_path(search) : ecourt_test_path(:ecourt_id=>search.id)
     end
     (path.present?) ? link_to(text, path, {:target=>'_blank', :title=>title}) : text
   end
